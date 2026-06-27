@@ -1,0 +1,83 @@
+{
+    "generated_at": "2026-06-25T04:16:55+00:00",
+    "packages": {
+        "goodbye": {
+            "architecture": "x86_64",
+            "build_date": "2026-06-25",
+            "depends": [],
+            "description": "Programa de exemplo: imprime 'goodbye'",
+            "homepage": "https://example.org/goodbye",
+            "license": "MIT",
+            "maintainer": "Example <dev@example.org>",
+            "repository": "local",
+            "sha256": "5581b9f3afff3ee147caa966b255f2e50cb3fc24f26ac73b137ed228b4e41686",
+            "size": 336,
+            "type": "binary",
+            "url": "packages/goodbye-1.0-x86_64.tar.gz",
+            "version": "1.0"
+        },
+        "hello": {
+            "architecture": "x86_64",
+            "build_date": "2026-06-25",
+            "depends": [],
+            "description": "Programa de exemplo: imprime 'hello'",
+            "homepage": "https://example.org/hello",
+            "license": "MIT",
+            "maintainer": "Example <dev@example.org>",
+            "repository": "local",
+            "sha256": "c9901c9558872443bf6b8b637568914e53f53688dec0334f95783407506edaaf",
+            "size": 465,
+            "type": "binary",
+            "url": "packages/hello-1.0-x86_64.tar.gz",
+            "version": "1.0"
+        },
+        "htop": {
+            "architecture": "any",
+            "depends": [
+                "ncurses>=6.0"
+            ],
+            "description": "Visualizador de processos interativo (top melhorado)",
+            "homepage": "https://htop.dev/",
+            "license": "GPL-2.0-or-later",
+            "maintainer": "Htop Authors <htop@example.org>",
+            "recipe": "recipes/htop.toml",
+            "repository": "local",
+            "sha256": "671e70579e457d711911efa69a3c2a33209d0e05d86b433dd40bed21be935a37",
+            "size": 916,
+            "type": "recipe",
+            "version": "3.3.0"
+        },
+        "ripgrep": {
+            "architecture": "x86_64",
+            "depends": [],
+            "description": "Busca recursiva r\u00e1pida (alternativa ao grep)",
+            "homepage": "https://github.com/BurntSushi/ripgrep",
+            "license": "MIT",
+            "maintainer": "Andrew Gallant <jamslam@example.org>",
+            "recipe": "recipes/ripgrep.toml",
+            "repository": "local",
+            "sha256": "519eefa1dae8269786bbdb43bc08712fa5003c36ff5fc014aef531c44b3d7a42",
+            "size": 1256,
+            "type": "recipe",
+            "version": "14.1.0"
+        },
+        "tmux": {
+            "architecture": "any",
+            "depends": [
+                "ncurses>=6.0",
+                "libevent>=2.1"
+            ],
+            "description": "Multiplexador de terminal",
+            "homepage": "https://tmux.github.io/",
+            "license": "ISC",
+            "maintainer": "Nicholas Marriott <nicholas.marriott@example.org>",
+            "recipe": "recipes/tmux.toml",
+            "repository": "local",
+            "sha256": "4996c757966830dc155ac940c9eb0ebbd7c573d5a4b263d4f78a437470fd61c4",
+            "size": 637,
+            "type": "recipe",
+            "version": "3.4"
+        }
+    },
+    "schema_version": 1
+}

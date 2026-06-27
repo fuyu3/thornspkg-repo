@@ -1,0 +1,24 @@
+# Receita remota de exemplo — htop
+# Este arquivo fica no repositório (recipes/htop.toml) e é baixado pelo
+# thornspkg quando o usuário pede `thorn install htop` e não há binário.
+# O thornspkg baixa a receita, verifica SHA256 contra o index.json, e
+# então compila localmente usando os sources declarados aqui.
+
+name         = "htop"
+version      = "3.3.0"
+description  = "Visualizador de processos interativo (top melhorado)"
+homepage     = "https://htop.dev/"
+license      = "GPL-2.0-or-later"
+maintainer   = "Htop Authors <htop@example.org>"
+repository   = "local"
+architecture = "any"
+
+# depends suporta operadores de versão (v0.4+)
+depends      = ["ncurses>=6.0"]
+
+source       = "https://github.com/htop-dev/htop/releases/download/3.3.0/htop-3.3.0.tar.xz"
+# sha256 = "preencha com: sha256sum htop-3.3.0.tar.xz"
+
+build_system   = "autotools"
+configure_args = ["--enable-unicode"]
+post_install   = []
