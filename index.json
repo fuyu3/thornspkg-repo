@@ -1,5 +1,5 @@
 {
-    "generated_at": "2026-06-29T04:39:22+00:00",
+    "generated_at": "2026-06-29T05:06:46+00:00",
     "packages": {
         "bzip2": {
             "architecture": "x86_64",
@@ -836,7 +836,7 @@
             "provides": [],
             "recipe": "recipes/perl-5.42.2.toml",
             "repository": "lfs-base",
-            "sha256": "efd5ce4258612da9ff843e88d95e8ed8a9d5bcefd30579c0b33dc59adc11bbc5",
+            "sha256": "664856212e355df446cb7d68ddc5f9fdd41550037c9bbab857c4c0ff8f6a182a",
             "size": 2139,
             "type": "recipe",
             "version": "5.42.2"
