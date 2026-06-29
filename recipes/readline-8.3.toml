@@ -19,7 +19,7 @@ depends       = ["ncurses"]
 optional_deps = []
 
 source  = "https://mirrors.kernel.org/gnu/readline/readline-8.3.tar.gz"
-sha256  = "849f036fa7a9cd6584e568db084ad32b5df26c1a3eb9e09b50eecb9d0ebdd916"
+sha256  = "fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc"
 
 # LFS: 3 seds para evitar bugs de linking + 1 sed para fix específico da 8.3
 pre_build = [

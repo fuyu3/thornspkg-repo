@@ -1,5 +1,5 @@
 {
-    "generated_at": "2026-06-29T22:05:58+00:00",
+    "generated_at": "2026-06-29T22:11:29+00:00",
     "packages": {
         "bzip2": {
             "architecture": "x86_64",
@@ -974,7 +974,7 @@
             "provides": [],
             "recipe": "recipes/readline-8.3.toml",
             "repository": "lfs-base",
-            "sha256": "19c69d97a090876745c4b0d40961c43f8f89671b2befc84c49b7b8c40a823192",
+            "sha256": "a48b58c293049b014ea3e34630167bb673ec253e5e92f08e4d17d9821a2b9cf3",
             "size": 1651,
             "type": "recipe",
             "version": "8.3"
