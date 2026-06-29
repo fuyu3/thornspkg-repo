@@ -26,4 +26,9 @@ sha256  = "445ed8208a6e4823de1226a74ca319d3600e83f6369f99b14265006599c32ccb"
 build_system   = "meson"
 configure_args = ["--buildtype=release"]
 
+install_steps = [
+    "make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
+
 post_install = ["ldconfig"]

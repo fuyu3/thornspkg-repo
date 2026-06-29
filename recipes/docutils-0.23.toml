@@ -28,6 +28,7 @@ steps = [
 ]
 install_steps = [
     "pip3 install --no-index --find-links dist --no-user docutils",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
 ]
 
 # Remove arquivos .py de versões anteriores (se existirem)

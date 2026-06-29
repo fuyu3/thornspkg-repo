@@ -33,6 +33,9 @@ steps = [
     "meson setup _build --prefix=/usr --buildtype=release",
     "ninja -C _build",
 ]
-install_steps = ["ninja -C _build install"]
+install_steps = [
+    "ninja -C _build install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
 
 post_install = ["ldconfig"]

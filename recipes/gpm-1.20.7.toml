@@ -45,10 +45,11 @@ steps = [
     "make",
 ]
 install_steps = [
-    """make install && \\
-    rm -fv /usr/lib/libgpm.a && \\
-    ln -sfv libgpm.so.2.1.0 /usr/lib/libgpm.so && \\
-    install -v -m644 conf/gpm-root.conf /etc 2>/dev/null || true""",
+    """make DESTDIR=$DESTDIR install && \\
+    rm -fv $DESTDIR/usr/lib/libgpm.a && \\
+    ln -sfv libgpm.so.2.1.0 $DESTDIR/usr/lib/libgpm.so && \\
+    install -v -m644 conf/gpm-root.conf $DESTDIR/etc 2>/dev/null || true""",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
 ]
 
 post_install = ["ldconfig"]

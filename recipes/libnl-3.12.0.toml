@@ -31,6 +31,9 @@ steps = [
     "./configure --prefix=/usr --sysconfdir=/etc --disable-static",
     "make -j1",
 ]
-install_steps = ["make install"]
+install_steps = [
+    "make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
 
 post_install = ["ldconfig"]

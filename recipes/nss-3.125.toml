@@ -53,7 +53,8 @@ steps = [
     """cd nss && make BUILD_OPT=1 NSPR_INCLUDE_DIR=/usr/include/nspr USE_SYSTEM_ZLIB=1 ZLIB_LIBS=-lz NSS_ENABLE_WERROR=0 NSS_USE_SYSTEM_SQLITE=1 $([ $(uname -m) = x86_64 ] && echo USE_64=1)""",
 ]
 install_steps = [
-    """cd ../dist && install -v -m755 Linux*/lib/*.so $DESTDIR/usr/lib && install -v -m644 Linux*/lib/*.chk $DESTDIR/usr/lib && install -v -m755 -d $DESTDIR/usr/include/nss && cp -v -RL {public,private}/nss/* $DESTDIR/usr/include/nss && install -v -m755 Linux*/lib/pkgconfig/nss.pc $DESTDIR/usr/lib/pkgconfig && install -v -m755 Linux*/bin/* $DESTDIR/usr/bin""",
+    "cd ../dist && install -v -m755 Linux*/lib/*.so $DESTDIR/usr/lib && install -v -m644 Linux*/lib/*.chk $DESTDIR/usr/lib && install -v -m755 -d $DESTDIR/usr/include/nss && cp -v -RL {public,private}/nss/* $DESTDIR/usr/include/nss && install -v -m755 Linux*/lib/pkgconfig/nss.pc $DESTDIR/usr/lib/pkgconfig && install -v -m755 Linux*/bin/* $DESTDIR/usr/bin",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
 ]
 
 post_install = ["ldconfig"]

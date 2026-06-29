@@ -33,6 +33,7 @@ steps = [
 ]
 install_steps = [
     "make -f Makefile.sharedlibrary INSTALL_PREFIX=/usr install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
 ]
 
 post_install = ["ldconfig"]

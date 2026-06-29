@@ -21,7 +21,7 @@ depends       = ["zlib", "bzip2", "gdbm"]
 optional_deps = []
 
 source  = "https://www.cpan.org/src/5.0/perl-5.42.2.tar.xz"
-sha256  = "0a585eeb9e363c0f80482ddb3571625250c2c86aeb408853e8ea50805cfb14bb"
+sha256  = "a26a54aef777d51287061a332a565e209c596e5397d16b665c9131075c8432c5"
 
 # LFS: exporta 2 variáveis de ambiente para usar libs do sistema
 pre_build = []
@@ -56,6 +56,9 @@ steps = [
         -D usethreads""",
     "make",
 ]
-install_steps = ["make install"]
+install_steps = [
+    "make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
 
 post_install = ["ldconfig"]

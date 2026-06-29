@@ -29,4 +29,9 @@ configure_args = [
     "--with-gcc-arch=native",
 ]
 
+install_steps = [
+    "make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
+
 post_install = ["ldconfig"]

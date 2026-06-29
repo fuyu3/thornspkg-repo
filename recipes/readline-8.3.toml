@@ -39,6 +39,9 @@ steps = [
         --docdir=/usr/share/doc/readline-8.3""",
     """make SHLIB_LIBS="-lncursesw" """,
 ]
-install_steps = ["make install"]
+install_steps = [
+    "make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
 
 post_install = ["ldconfig"]

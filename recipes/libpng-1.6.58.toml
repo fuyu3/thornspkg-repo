@@ -21,6 +21,11 @@ sha256  = "28eb403f51f0f7405249132cecfe82ea5c0ef97f1b32c5a65828814ae0d34775"
 build_system   = "autotools"
 configure_args = ["--disable-static"]
 
+install_steps = [
+    "make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
+
 post_install = [
     "ldconfig",
     "install -vDm644 README libpng-manual.txt -t /usr/share/doc/libpng-1.6.58 2>/dev/null || true",

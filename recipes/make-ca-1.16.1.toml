@@ -38,6 +38,7 @@ install_steps = [
     "make install",
     "install -vdm 755 $DESTDIR/etc/ssl/local",
     "install -vdm 755 $DESTDIR/etc/pki/anchors",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
 ]
 
 # Após instalar o script, executa uma vez para gerar os trust stores

@@ -40,6 +40,7 @@ steps = [
 install_steps = [
     """make DESTDIR=$DESTDIR install && \\
     sed -e 's/^#if.*XOPEN.*$/#if 1/' -i $DESTDIR/usr/include/curses.h""",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
 ]
 
 post_install = ["ldconfig"]

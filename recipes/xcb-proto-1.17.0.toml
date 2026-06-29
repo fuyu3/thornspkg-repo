@@ -20,3 +20,8 @@ sha256  = "2c1bacd2110f4799f74de6ebb714b94cf6f80fb112316b1219480fd22562148c"
 
 build_system   = "autotools"
 configure_args = []
+
+install_steps = [
+    "make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]

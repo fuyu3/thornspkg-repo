@@ -30,6 +30,9 @@ steps = [
     "cd source && ./configure --prefix=/usr",
     "cd source && make",
 ]
-install_steps = ["cd source && make install"]
+install_steps = [
+    "cd source && make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
 
 post_install = ["ldconfig"]

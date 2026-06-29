@@ -21,4 +21,9 @@ sha256  = "f557911bf6171621e1f72ff35f5b1825bb35b52ed45325dcdee931e5d3c0787a"
 build_system   = "autotools"
 configure_args = ["--disable-static"]
 
+install_steps = [
+    "make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
+
 post_install = ["ldconfig"]

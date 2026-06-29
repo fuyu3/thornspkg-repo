@@ -79,7 +79,8 @@ steps = [
     "cd wpa_supplicant && make BINDIR=/usr/sbin LIBDIR=/usr/lib",
 ]
 install_steps = [
-    """cd wpa_supplicant && install -v -m755 wpa_{cli,_supplicant} $DESTDIR/usr/sbin/ && install -v -m644 dbus/fi.epitest.hostap.WPASupplicant.service $DESTDIR/usr/share/dbus-1/system-services/ && install -v -m644 dbus/fi.w1.wpa_supplicant1.service $DESTDIR/usr/share/dbus-1/system-services/ && install -v -d $DESTDIR/etc/dbus-1/system.d && install -v -m644 dbus/dbus-wpa_supplicant.conf $DESTDIR/etc/dbus-1/system.d/wpa_supplicant.conf && install -v -m644 wpa_supplicant.conf $DESTDIR/etc/wpa_supplicant.conf""",
+    "cd wpa_supplicant && install -v -m755 wpa_{cli,_supplicant} $DESTDIR/usr/sbin/ && install -v -m644 dbus/fi.epitest.hostap.WPASupplicant.service $DESTDIR/usr/share/dbus-1/system-services/ && install -v -m644 dbus/fi.w1.wpa_supplicant1.service $DESTDIR/usr/share/dbus-1/system-services/ && install -v -d $DESTDIR/etc/dbus-1/system.d && install -v -m644 dbus/dbus-wpa_supplicant.conf $DESTDIR/etc/dbus-1/system.d/wpa_supplicant.conf && install -v -m644 wpa_supplicant.conf $DESTDIR/etc/wpa_supplicant.conf",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
 ]
 
 post_install = ["ldconfig"]

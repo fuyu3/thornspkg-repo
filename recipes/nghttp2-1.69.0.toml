@@ -27,4 +27,9 @@ configure_args = [
     "--docdir=/usr/share/doc/nghttp2-1.69.0",
 ]
 
+install_steps = [
+    "make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
+
 post_install = ["ldconfig"]

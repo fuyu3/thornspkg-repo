@@ -33,6 +33,11 @@ configure_args = [
 ]
 
 # Documentação extra (opcional mas recomendada pelo BLFS).
+install_steps = [
+    "make install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
+]
+
 post_install = [
     "ldconfig",
     """install -v -d /usr/share/doc/curl-8.21.0 &&

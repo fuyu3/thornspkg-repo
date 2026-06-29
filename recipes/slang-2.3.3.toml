@@ -29,7 +29,8 @@ steps = [
     "make -j1 RPATH=",
 ]
 install_steps = [
-    "make install_doc_dir=/usr/share/doc/slang-2.3.3 SLSH_DOC_DIR=/usr/share/doc/slang-2.3.3/slsh RPATH= install",
+    "make DESTDIR=$DESTDIR install_doc_dir=/usr/share/doc/slang-2.3.3 SLSH_DOC_DIR=/usr/share/doc/slang-2.3.3/slsh RPATH= install",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
 ]
 
 post_install = ["ldconfig"]

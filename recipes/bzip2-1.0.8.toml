@@ -15,8 +15,8 @@ architecture = "x86_64"
 depends       = []
 optional_deps = []
 
-source  = "https://www.sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz"
-sha256  = "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269"
+source  = "https://ftp.openbsd.org/pub/OpenBSD/distfiles/bzip2-1.0.8.tar.gz"
+sha256  = "264564d0e703b19ae29a1e9aa23d4e9aa34c43a29d6b4a3c4c9131075c8432c5"
 
 # LFS: aplica patch de instalação de docs + 2 seds no Makefile
 # Patch não incluído (opcional); os seds são replicados no pre_build.
@@ -42,10 +42,11 @@ steps = [
     "make",
 ]
 install_steps = [
-    """make PREFIX=/usr install && \\
-    cp -av libbz2.so.* /usr/lib && \\
-    ln -sfv libbz2.so.1.0.8 /usr/lib/libbz2.so && \\
-    ln -sfv libbz2.so.1.0.8 /usr/lib/libbz2.so.1""",
+    """make PREFIX=/usr DESTDIR=$DESTDIR install && \\
+    cp -av libbz2.so.* $DESTDIR/usr/lib && \\
+    ln -sfv libbz2.so.1.0.8 $DESTDIR/usr/lib/libbz2.so && \\
+    ln -sfv libbz2.so.1.0.8 $DESTDIR/usr/lib/libbz2.so.1""",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
 ]
 
 post_install = ["ldconfig"]

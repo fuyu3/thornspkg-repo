@@ -30,9 +30,11 @@ steps = [
     "make",
 ]
 install_steps = [
-    """make INSTALL_LIBS= MANSUFFIX=ssl install""",
-    # Adiciona sufixo de versão ao dir de docs (consistência com outros pacotes)
-    """mv -v /usr/share/doc/openssl /usr/share/doc/openssl-4.0.1 2>/dev/null || true""",
+    # DESTDIR=$DESTDIR é CRÍTICO — sem isso o openssl instala em / direto
+    # e o thornspkg pensa que "0 arquivos foram instalados"
+    "make INSTALL_LIBS= MANSUFFIX=ssl DESTDIR=$DESTDIR install",
+    "mv -v $DESTDIR/usr/share/doc/openssl $DESTDIR/usr/share/doc/openssl-4.0.1 2>/dev/null || true",
+    "rm -f $DESTDIR/usr/share/info/dir 2>/dev/null || true",
 ]
 
 post_install = ["ldconfig"]
