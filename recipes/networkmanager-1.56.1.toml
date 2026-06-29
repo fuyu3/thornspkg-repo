@@ -1,0 +1,119 @@
+# NetworkManager-1.56.1 — gerenciador de rede do Linux
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/basicnet/networkmanager.html
+#
+# IMPORTANTE: o GitLab freedesktop bloqueou o download programático
+# a partir deste ambiente. O `sha256` abaixo ficou comentado — após o
+# primeiro `thorn install networkmanager`, calcule com:
+#     sha256sum /var/cache/thornspkg/sources/NetworkManager-1.56.1.tar.xz
+# e descomente a linha `sha256` para verificação permanente.
+
+name         = "networkmanager"
+version      = "1.56.1"
+description  = "Gerenciador de rede para WiFi/ethernet/3G/Bluetooth com auto-detecção"
+homepage     = "https://networkmanager.dev/"
+license      = "GPL-2.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+# ════════════════════════════════════════════════════════════════════════════
+# ÁRVORE DE DEPENDÊNCIAS COMPLETA (todas as Required + Recommended do BLFS,
+# excluindo só as explicitamente Optional como BlueZ, ModemManager, jansson,
+# libnvme, UPower, Valgrind).
+# ════════════════════════════════════════════════════════════════════════════
+#
+# Folhas (sem deps externas além do LFS base):
+#   libndp, libunistring, popt, slang, nspr, libnl, nghttp2, duktape, iptables
+#
+# Nível 1 (deps de folhas):
+#   libidn2     → libunistring
+#
+# Nível 2:
+#   libpsl      → libidn2, libunistring
+#   newt        → popt, slang
+#   glib        → (sem deps)
+#
+# Nível 3:
+#   gobject-introspection → glib
+#   curl        → openssl (LFS), libpsl, nghttp2
+#   vala        → glib, gobject-introspection
+#
+# Nível 4:
+#   nss         → nspr, sqlite (LFS), zlib (LFS)
+#   polkit      → duktape, glib, gobject-introspection
+#   pygobject   → glib, gobject-introspection, python (LFS)
+#   wpa_supplicant → openssl (LFS), libnl
+#
+# Nível 5 (NetworkManager):
+#   networkmanager → libndp, libpsl, newt, glib, curl, nss, polkit,
+#                    pygobject, systemd (LFS), vala, wpa_supplicant, iptables
+
+depends = [
+    # Required (BLFS)
+    "libndp",
+    # Recommended (BLFS) — todas com receitas neste conjunto
+    "curl",
+    "glib",
+    "iptables",
+    "libpsl",
+    "newt",
+    "nss",
+    "polkit",
+    "pygobject",
+    "systemd",   # do LFS (systemd edition)
+    "vala",
+    "wpa_supplicant",
+]
+
+# Recomendados de runtime (não bloqueiam build se ausentes):
+optional_deps = []
+
+# ════════════════════════════════════════════════════════════════════════════
+# Source
+# ════════════════════════════════════════════════════════════════════════════
+source  = "https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/releases/1.56.1/downloads/NetworkManager-1.56.1.tar.xz"
+sha256 = "e21ec74b24f72a044e75c0ae92a9bb62"
+# MD5 de referência reportado pelo BLFS: e21ec74b24f72a044e75c0ae92a9bb62
+
+# ════════════════════════════════════════════════════════════════════════════
+# Build (meson)
+# ════════════════════════════════════════════════════════════════════════════
+pre_build = [
+    # BLFS manda corrigir shebangs `#!/usr/bin/env python` → `python3`
+    "grep -rl '^#!.*python$' . | xargs sed -i '1s/python/&3/'",
+]
+
+build_system   = "meson"
+configure_args = [
+    "--buildtype=release",
+    "-D libaudit=no",
+    "-D nmtui=true",
+    "-D ovs=false",       # precisa jansson (optional, skip)
+    "-D ppp=false",       # PPP não é default no BLFS
+    "-D nbft=false",      # precisa libnvme (optional, skip)
+    "-D selinux=false",
+    "-D qt=false",
+    "-D session_tracking=systemd",
+    "-D nm_cloud_setup=false",  # precisa jansson (optional, skip)
+    "-D modem_manager=false",   # ModemManager é Optional (skip)
+]
+
+# ════════════════════════════════════════════════════════════════════════════
+# Pós-instalação
+# ════════════════════════════════════════════════════════════════════════════
+post_install = [
+    "ldconfig",
+    # Cria NetworkManager.conf mínimo se ainda não existir
+    """[ -f /etc/NetworkManager/NetworkManager.conf ] || \\
+        install -vdm 755 /etc/NetworkManager && \\
+        printf '[main]\\nplugins=keyfile\\n' > /etc/NetworkManager/NetworkManager.conf""",
+    # Cria grupo netdev (gid 86) — usado pelo polkit para autorizar usuários
+    "getent group netdev >/dev/null 2>&1 || groupadd -g 86 netdev",
+]
+
+# Antes de remover, para o serviço se estiver rodando.
+pre_remove = [
+    "systemctl is-active NetworkManager.service >/dev/null 2>&1 && systemctl stop NetworkManager.service || true",
+    "systemctl is-enabled NetworkManager.service >/dev/null 2>&1 && systemctl disable NetworkManager.service || true",
+]

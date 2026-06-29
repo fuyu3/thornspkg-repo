@@ -1,0 +1,33 @@
+# libxslt-1.1.45 — biblioteca XSLT C (baseada em libxml2)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/libxslt.html
+# Required: libxml2 (com receita neste conjunto).
+# BLFS usa --without-python porque PyXSLT não é necessário para o stack NM.
+
+name         = "libxslt"
+version      = "1.1.45"
+description  = "Biblioteca XSLT C — extensão do libxml2 para transformações XSLT"
+homepage     = "https://gitlab.gnome.org/GNOME/libxslt"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["libxml2"]
+optional_deps = []
+
+source  = "https://download.gnome.org/sources/libxslt/1.1/libxslt-1.1.45.tar.xz"
+sha256  = "9acfe68419c4d06a45c550321b3212762d92f41465062ca4ea19e632ee5d216e"
+
+# BLFS:
+#   ./configure --prefix=/usr --disable-static --without-python --docdir=...
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = [
+    "--disable-static",
+    "--without-python",
+    "--docdir=/usr/share/doc/libxslt-1.1.45",
+]
+
+post_install = ["ldconfig"]

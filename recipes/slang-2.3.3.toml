@@ -1,0 +1,35 @@
+# slang-2.3.3 — biblioteca S-Lang para UIs em modo texto
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/slang.html
+# Sem dependências obrigatórias.
+# IMPORTANTE: o BLFS alerta que NÃO suporta build paralelo — usa make -j1.
+
+name         = "slang"
+version      = "2.3.3"
+description  = "Biblioteca S-Lang para scripting embutido e UIs em modo texto"
+homepage     = "https://www.jedsoft.org/slang/"
+license      = "GPL-2.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://www.jedsoft.org/releases/slang/slang-2.3.3.tar.bz2"
+sha256  = "f9145054ae131973c61208ea82486d5dd10e3c5cdad23b7c4a0617743c8f5a18"
+
+build_system = "custom"
+# BLFS: ./configure --prefix=/usr --sysconfdir=/etc --with-readline=gnu
+#        make -j1 RPATH=
+#        make install_doc_dir=... SLSH_DOC_DIR=... RPATH= install
+# O thornspkg não permite -j0; -j1 é o que o BLFS pede (não suporta paralelo).
+steps = [
+    "./configure --prefix=/usr --sysconfdir=/etc --with-readline=gnu",
+    "make -j1 RPATH=",
+]
+install_steps = [
+    "make install_doc_dir=/usr/share/doc/slang-2.3.3 SLSH_DOC_DIR=/usr/share/doc/slang-2.3.3/slsh RPATH= install",
+]
+
+post_install = ["ldconfig"]

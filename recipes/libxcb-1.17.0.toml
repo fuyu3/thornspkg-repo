@@ -1,0 +1,28 @@
+# libxcb-1.17.0 — X C Binding (XCB)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/x/libxcb.html
+# Deps: libxau, libxdmcp, xcb-proto.
+
+name         = "libxcb"
+version      = "1.17.0"
+description  = "X C Binding (XCB) — substituto moderno para libX11 (base do Xorg)"
+homepage     = "https://xcb.freedesktop.org/"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["libxau", "libxdmcp", "xcb-proto", "python"]
+optional_deps = []
+
+source  = "https://xorg.freedesktop.org/archive/individual/lib/libxcb-1.17.0.tar.xz"
+sha256  = "599ebf9996710fea71622e6e184f3a8ad5b43d0e5fa8c4e407123c88a59a6d55"
+
+build_system   = "autotools"
+configure_args = [
+    "--disable-static",
+    "--without-doxygen",
+    "--docdir=/usr/share/doc/libxcb-1.17.0",
+]
+
+post_install = ["ldconfig"]

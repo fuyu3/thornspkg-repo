@@ -1,0 +1,22 @@
+# which-2.25 — utilitário which (mostra caminho completo de comandos)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/which.html
+# Sem deps externas.
+
+name         = "which"
+version      = "2.25"
+description  = "Which — mostra o caminho completo de comandos instalados no PATH"
+homepage     = "https://carlowood.github.io/which/"
+license      = "GPL-3.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://mirrors.kernel.org/gnu/which/which-2.25.tar.gz"
+sha256  = "1cb83e4f702e60b8211ab5ec4c2afbab1b1dec80209456a7d2faf7584ed225ea"
+
+build_system   = "autotools"
+configure_args = []

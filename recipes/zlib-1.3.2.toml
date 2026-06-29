@@ -1,0 +1,33 @@
+# zlib-1.3.2 — biblioteca de compressão DEFLATE (RFC 1951)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/zlib.html
+# Sem dependências externas (além do toolchain LFS).
+
+name         = "zlib"
+version      = "1.3.2"
+description  = "Biblioteca de compressão DEFLATE (usada por zip, gzip, openssl, etc.)"
+homepage     = "https://zlib.net/"
+license      = "Zlib"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://zlib.net/fossils/zlib-1.3.2.tar.gz"
+sha256  = "bb329a0a2cd0274d05519d61c667c062e06990d72e125ee2dfa8de64f0119d16"
+
+# BLFS/LFS:
+#   ./configure --prefix=/usr
+#   make
+#   make install
+#   rm -fv /usr/lib/libz.a    (remove static library — não usamos)
+build_system   = "autotools"
+configure_args = []
+
+# Remove static lib (LFS faz isso explicitamente após install)
+post_install = [
+    "ldconfig",
+    "rm -fv /usr/lib/libz.a",
+]

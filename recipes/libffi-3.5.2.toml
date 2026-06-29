@@ -1,0 +1,32 @@
+# libffi-3.5.2 — biblioteca de Foreign Function Interface (chamadas C dinâmicas)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/libffi.html
+# Sem dependências externas (além do toolchain LFS).
+# Importante para: Python (ctypes), gjs, gobject-introspection.
+
+name         = "libffi"
+version      = "3.5.2"
+description  = "Biblioteca C para Foreign Function Interface — chamadas a funções C arbitrárias em runtime"
+homepage     = "https://sourceware.org/libffi/"
+license      = "MIT"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz"
+sha256  = "f3a3082a23b37c293a4fcd1053147b371f2ff91fa7ea1b2a52e335676bac82dc"
+
+# LFS:
+#   ./configure --prefix=/usr --disable-static --with-gcc-arch=native
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = [
+    "--disable-static",
+    "--with-gcc-arch=native",
+]
+
+post_install = ["ldconfig"]

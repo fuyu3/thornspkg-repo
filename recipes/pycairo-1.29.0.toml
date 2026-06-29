@@ -1,0 +1,29 @@
+# pycairo-1.29.0 — bindings Python para Cairo
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/python-modules.html#pycairo
+# Deps Required: Cairo. (Optional: pytest para testes.)
+
+name         = "pycairo"
+version      = "1.29.0"
+description  = "Bindings Python para a biblioteca Cairo — usado por pygobject"
+homepage     = "https://pycairo.readthedocs.io/"
+license      = "LGPL-2.1-or-later OR MPL-1.1"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "any"
+
+depends       = ["cairo", "python"]
+optional_deps = []
+
+source  = "https://github.com/pygobject/pycairo/releases/download/v1.29.0/pycairo-1.29.0.tar.gz"
+sha256  = "f3f7fde97325cae80224c09f12564ef58d0d0f655da0e3b040f5807bd5bd3142"
+
+# BLFS:
+#   mkdir build && cd build
+#   meson setup --prefix=/usr --buildtype=release ..
+#   ninja
+#   ninja install
+build_system   = "meson"
+configure_args = ["--buildtype=release"]
+
+post_install = ["ldconfig"]

@@ -1,0 +1,29 @@
+# libndp-1.9 — wrapper para IPv6 Neighbor Discovery Protocol
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/basicnet/libndp.html
+# Única dependência OBRIGATÓRIA do NetworkManager.
+# Sem dependências externas.
+
+name         = "libndp"
+version      = "1.9"
+description  = "Wrapper para IPv6 Neighbor Discovery Protocol + ferramenta ndptool"
+homepage     = "http://libndp.org/"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "http://libndp.org/files/libndp-1.9.tar.gz"
+sha256  = "a8ab214e01dc3a9b615276905395637f391298c84d77651f0cbf0b1082dd2dd4"
+
+build_system   = "autotools"
+configure_args = [
+    "--sysconfdir=/etc",
+    "--localstatedir=/var",
+    "--disable-static",
+]
+
+post_install = ["ldconfig"]

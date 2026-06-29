@@ -1,0 +1,44 @@
+# readline-8.3 — biblioteca para edição de linha de comando (GNU Readline)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/readline.html
+# Deps: ncurses (usado via --with-curses).
+#
+# Usa build_system=custom porque o LFS passa SHLIB_LIBS="-lncursesw" no make,
+# que o thornspkg não suporta via configure_args.
+
+name         = "readline"
+version      = "8.3"
+description  = "Biblioteca GNU Readline — edição de linha de comando (bash, gdb, etc.)"
+homepage     = "https://tiswww.case.edu/php/chet/readline/rltop.html"
+license      = "GPL-3.0-or-later"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+depends       = ["ncurses"]
+optional_deps = []
+
+source  = "https://mirrors.kernel.org/gnu/readline/readline-8.3.tar.gz"
+sha256  = "849f036fa7a9cd6584e568db084ad32b5df26c1a3eb9e09b50eecb9d0ebdd916"
+
+# LFS: 3 seds para evitar bugs de linking + 1 sed para fix específico da 8.3
+pre_build = [
+    "sed -i '/MV.*old/d' Makefile.in",
+    "sed -i '/{OLDSUFF}/c:' support/shlib-install",
+    "sed -i 's/-Wl,-rpath,[^ ]*//' support/shobj-conf",
+    "sed -e '270a\\ else\\ chars_avail = 1;' -e '288i\\ result = -1;' -i.orig input.c",
+]
+
+# LFS:
+#   ./configure --prefix=/usr --disable-static --with-curses --docdir=...
+#   make SHLIB_LIBS="-lncursesw"
+#   make install
+build_system = "custom"
+steps = [
+    """./configure --prefix=/usr --disable-static --with-curses \\
+        --docdir=/usr/share/doc/readline-8.3""",
+    """make SHLIB_LIBS="-lncursesw" """,
+]
+install_steps = ["make install"]
+
+post_install = ["ldconfig"]

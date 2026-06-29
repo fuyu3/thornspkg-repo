@@ -1,0 +1,28 @@
+# libunistring-1.4.2 — biblioteca C para manipulação de strings Unicode
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/libunistring.html
+# Sem dependências (além de glibc/gcc do LFS base).
+# BLFS: ./configure --prefix=/usr --disable-static --docdir=... && make && make install
+
+name         = "libunistring"
+version      = "1.4.2"
+description  = "Biblioteca C para manipulação de strings Unicode"
+homepage     = "https://www.gnu.org/software/libunistring/"
+license      = "LGPL-3.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://mirrors.kernel.org/gnu/libunistring/libunistring-1.4.2.tar.xz"
+sha256  = "5b46e74377ed7409c5b75e7a96f95377b095623b689d8522620927964a41499c"
+
+build_system   = "autotools"
+configure_args = [
+    "--disable-static",
+    "--docdir=/usr/share/doc/libunistring-1.4.2",
+]
+
+post_install = ["ldconfig"]

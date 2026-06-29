@@ -1,0 +1,51 @@
+# p11-kit-0.26.2 — toolkit para carregar e manipular PKCS#11 modules
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/postlfs/p11-kit.html
+# Recommended: libtasn1 (com receita neste conjunto).
+# Runtime: make-ca (com receita neste conjunto) — para gerar trust store.
+
+name         = "p11-kit"
+version      = "0.26.2"
+description  = "Toolkit para carregar e manipular módulos PKCS#11 — trust store do sistema"
+homepage     = "https://p11-glue.github.io/p11-glue/p11-kit.html"
+license      = "BSD-3-Clause"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+# libtasn1 é Recommended pelo BLFS — incluindo como dep obrigatória.
+# make-ca é runtime (não está em optional_deps para evitar ciclo: make-ca → p11-kit).
+depends       = ["libtasn1"]
+optional_deps = []
+
+source  = "https://github.com/p11-glue/p11-kit/releases/download/0.26.2/p11-kit-0.26.2.tar.xz"
+sha256  = "09fd9f44da4813a3141e73d5e7cf7008e5660d0405f13d56c15e1da9dcecf828"
+
+# BLFS prepara um hook de âncora (trust-extract-compat) que chama o make-ca
+pre_build = [
+    """sed '20,$ d' -i trust/trust-extract-compat""",
+    """cat >> trust/trust-extract-compat << 'EOF'
+# Copy existing anchor modifications to /etc/ssl/local
+/usr/libexec/make-ca/copy-trust-modifications
+
+# Update trust stores
+/usr/sbin/make-ca -r
+EOF""",
+]
+
+# BLFS:
+#   mkdir p11-build && cd p11-build
+#   meson setup .. --prefix=/usr --buildtype=release -D trust_paths=/etc/pki/anchors
+#   ninja
+#   ninja install
+#   ln -sfv /usr/libexec/p11-kit/trust-extract-compat /usr/bin/update-ca-certificates
+build_system   = "meson"
+configure_args = [
+    "--buildtype=release",
+    "-D trust_paths=/etc/pki/anchors",
+]
+
+post_install = [
+    "ldconfig",
+    "ln -sfv /usr/libexec/p11-kit/trust-extract-compat /usr/bin/update-ca-certificates 2>/dev/null || true",
+]

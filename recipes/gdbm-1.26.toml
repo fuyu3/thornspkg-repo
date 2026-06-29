@@ -1,0 +1,33 @@
+# gdbm-1.26 — biblioteca de banco de dados chave-valor (GNU dbm)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/gdbm.html
+# Sem dependências externas (além do toolchain LFS).
+# Importante para: Python (módulo dbm), Perl (DB_File).
+
+name         = "gdbm"
+version      = "1.26"
+description  = "Biblioteca GNU dbm — banco de dados chave-valor em arquivo (hashing extensível)"
+homepage     = "https://www.gnu.org/software/gdbm/"
+license      = "GPL-3.0-or-later"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://mirrors.kernel.org/gnu/gdbm/gdbm-1.26.tar.gz"
+sha256  = "6a24504a14de4a744103dcb936be976df6fbe88ccff26065e54c1c47946f4a5e"
+
+# LFS:
+#   ./configure --prefix=/usr --disable-static --enable-libgdbm-compat
+#   make
+#   make install
+# --enable-libgdbm-compat: habilita libgdbm_compat (DBM antigo, alguns pacotes exigem)
+build_system   = "autotools"
+configure_args = [
+    "--disable-static",
+    "--enable-libgdbm-compat",
+]
+
+post_install = ["ldconfig"]

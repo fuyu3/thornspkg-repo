@@ -1,0 +1,38 @@
+# docutils-0.23 — ferramentas Python para processar plaintext docs (reStructuredText)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/python-modules.html#docutils
+# Pacote Python puro — instalado via pip3.
+# Deps: Python 3 (do LFS base). Sem outras deps obrigatórias.
+
+name         = "docutils"
+version      = "0.23"
+description  = "Conjunto de módulos Python para processar plaintext docs (reStructuredText) em HTML/XML/LaTeX"
+homepage     = "https://docutils.sourceforge.io/"
+license      = "Python-2.0.1"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "any"
+
+depends       = ["python"]
+optional_deps = []
+
+source  = "https://files.pythonhosted.org/packages/source/d/docutils/docutils-0.23.tar.gz"
+sha256  = "746f5060322511280a1e50eb76846ed6bf2342984b2ac04dc42caa1a8d78799e"
+
+# BLFS:
+#   pip3 wheel -w dist --no-build-isolation --no-deps --no-cache-dir $PWD
+#   pip3 install --no-index --find-links dist --no-user docutils
+build_system = "custom"
+steps = [
+    "pip3 wheel -w dist --no-build-isolation --no-deps --no-cache-dir $PWD",
+]
+install_steps = [
+    "pip3 install --no-index --find-links dist --no-user docutils",
+]
+
+# Remove arquivos .py de versões anteriores (se existirem)
+pre_build = [
+    "for f in /usr/bin/rst*.py; do [ -f \"$f\" ] && rm -fv /usr/bin/$(basename $f .py) || true; done",
+]
+
+post_install = []

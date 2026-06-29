@@ -1,0 +1,24 @@
+# pixman-0.46.4 — biblioteca de manipulação de pixels (low-level)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/pixman.html
+# Sem deps externas. Dep de cairo.
+
+name         = "pixman"
+version      = "0.46.4"
+description  = "Biblioteca low-level de manipulação de pixels — base do Cairo"
+homepage     = "http://pixman.org/"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://www.cairographics.org/releases/pixman-0.46.4.tar.gz"
+sha256  = "d09c44ebc3bd5bee7021c79f922fe8fb2fb57f7320f55e97ff9914d2346a591c"
+
+build_system   = "meson"
+configure_args = ["--buildtype=release"]
+
+post_install = ["ldconfig"]

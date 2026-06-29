@@ -1,0 +1,33 @@
+# iptables-1.8.13 — ferramenta de firewall do kernel Linux (netfilter)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/postlfs/iptables.html
+# Sem dependências externas (além do LFS base).
+
+name         = "iptables"
+version      = "1.8.13"
+description  = "Ferramenta de configuração do firewall netfilter do kernel Linux"
+homepage     = "https://www.netfilter.org/projects/iptables/"
+license      = "GPL-2.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://www.netfilter.org/projects/iptables/files/iptables-1.8.13.tar.xz"
+sha256  = "1afcd33da9e8f913ace6a2126788162e207e26f5d5e29c6573c0e581ffc58b99"
+
+# BLFS:
+#   ./configure --prefix=/usr --disable-nftables --enable-libipq
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = [
+    "--disable-nftables",
+    "--enable-libipq",
+]
+
+# iptables não tem .so principal (todas as extensões são .so separadas em
+# /usr/lib/xtables/), mas ldconfig garante consistência mesmo assim.
+post_install = ["ldconfig"]

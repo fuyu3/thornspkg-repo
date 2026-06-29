@@ -1,0 +1,34 @@
+# newt-0.52.25 — biblioteca para UIs em modo texto (necessária para nmtui)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/newt.html
+# Deps: popt, slang (ambas com receitas neste conjunto)
+
+name         = "newt"
+version      = "0.52.25"
+description  = "Biblioteca para UIs coloridas em modo texto (whiptail, snack)"
+homepage     = "https://pagure.io/newt"
+license      = "GPL-2.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["popt", "slang", "gpm"]
+optional_deps = []
+
+source  = "https://releases.pagure.org/newt/newt-0.52.25.tar.gz"
+sha256  = "ef0ca9ee27850d1a5c863bb7ff9aa08096c9ed312ece9087b30f3a426828de82"
+
+# BLFS: sed em Makefile.in para não instalar libnewt estática.
+pre_build = [
+    """sed -e '/install -m 644 $(LIBNEWT)/ s/^/#/' \\
+        -e '/$(LIBNEWT):/,/rv/ s/^/#/' \\
+        -e 's/$(LIBNEWT)/$(LIBNEWTSH)/g' \\
+        -i Makefile.in""",
+]
+
+build_system   = "autotools"
+configure_args = ["--with-gpm-support"]
+
+# GPM agora incluso neste conjunto — habilita suporte a mouse no terminal.
+
+post_install = ["ldconfig"]

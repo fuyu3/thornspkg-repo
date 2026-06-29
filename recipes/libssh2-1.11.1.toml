@@ -1,0 +1,44 @@
+# libssh2-1.11.1 — biblioteca C SSH2 (client-side)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/libssh2.html
+# Required: OpenSSL (com receita neste conjunto).
+# Importante para: curl (suporte a ssh://, sftp://).
+#
+# O patch libssh2-1.11.1-security_fixes-1.patch é baixado automaticamente
+# no pre_build e aplicado.
+
+name         = "libssh2"
+version      = "1.11.1"
+description  = "Biblioteca C SSH2 (client-side) — usada por curl para SSH/SFTP"
+homepage     = "https://www.libssh2.org/"
+license      = "BSD-3-Clause"
+maintainer   = "BLFS"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["openssl"]
+optional_deps = []
+
+source  = "https://www.libssh2.org/download/libssh2-1.11.1.tar.gz"
+sha256  = "d9ec76cbe34db98eec3539fe2c899d26b0c837cb3eb466a56b0f109cabf658f7"
+
+# BLFS: aplica patch de 3 correções de segurança — baixado automaticamente
+pre_build = [
+    """mkdir -p /tmp/thorn-patches && \\
+    curl -sL --max-time 30 -o /tmp/thorn-patches/libssh2-1.11.1-security_fixes-1.patch \\
+        "https://www.linuxfromscratch.org/patches/blfs/svn/libssh2-1.11.1-security_fixes-1.patch" && \\
+    echo "919a91a0ef99a97efe1f94e2bed7600ce12fdf5f3e6c978b8eba37fe4526ec5e  /tmp/thorn-patches/libssh2-1.11.1-security_fixes-1.patch" | sha256sum -c - && \\
+    patch -Np1 -i /tmp/thorn-patches/libssh2-1.11.1-security_fixes-1.patch""",
+]
+
+# BLFS:
+#   ./configure --prefix=/usr --disable-docker-tests --disable-static
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = [
+    "--disable-docker-tests",
+    "--disable-static",
+]
+
+post_install = ["ldconfig"]

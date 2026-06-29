@@ -1,0 +1,40 @@
+# graphite2-1.3.14 — biblioteca Graphite (renderização de fontes smart)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/graphite2.html
+# Deps: CMake (do LFS). Dep de harfbuzz.
+
+name         = "graphite2"
+version      = "1.3.14"
+description  = "Biblioteca Graphite — renderização de fontes smart (usada por harfbuzz)"
+homepage     = "https://github.com/silnrsi/graphite"
+license      = "LGPL-2.1-or-later OR MPL-1.1"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://github.com/silnrsi/graphite/releases/download/1.3.14/graphite2-1.3.14.tgz"
+sha256  = "f99d1c13aa5fa296898a181dff9b82fb25f6cc0933dbaa7a475d8109bd54209d"
+
+# BLFS: 3 seds para correções de build com CMake 4 e gcc-15
+pre_build = [
+    "sed -i '/cmptest/d' tests/CMakeLists.txt || true",
+    "sed -i '/cmake_policy(SET CMP0012 NEW)/d' CMakeLists.txt && sed -i 's/PythonInterp/Python3/' CMakeLists.txt && find . -name CMakeLists.txt | xargs sed -i 's/VERSION 2.8.0 FATAL_ERROR/VERSION 4.0.0/'",
+    "sed -i '/Font.h/i #include <cstdint>' tests/featuremap/featuremaptest.cpp",
+]
+
+# BLFS:
+#   mkdir build && cd build
+#   cmake -D CMAKE_INSTALL_PREFIX=/usr ..
+#   make
+#   make install
+build_system = "custom"
+steps = [
+    "mkdir build && cd build && cmake -D CMAKE_INSTALL_PREFIX=/usr ..",
+    "cd build && make",
+]
+install_steps = ["cd build && make install"]
+
+post_install = ["ldconfig"]

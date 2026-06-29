@@ -1,0 +1,50 @@
+# make-ca-1.16.1 — gerador de trust store de certificados CA
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/postlfs/make-ca.html
+# Required (runtime): p11-kit (com receita neste conjunto).
+# Optional (runtime): nss (com receita neste conjunto) — para gerar NSSDB compartilhado.
+#
+# IMPORTANTE: este script NÃO é compilado — é apenas um script shell que
+# baixa certdata.txt da Mozilla e gera os trust stores. O "build" consiste
+# em instalar o script e depois executá-lo uma vez (para gerar os stores).
+
+name         = "make-ca"
+version      = "1.16.1"
+description  = "Script para gerar e atualizar trust stores de certificados CA (Mozilla certdata.txt → PEM/OpensSL/NSSDB)"
+homepage     = "https://github.com/lfs-book/make-ca"
+license      = "GPL-2.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "any"
+
+depends       = ["p11-kit"]
+optional_deps = ["nss"]
+
+source  = "https://github.com/lfs-book/make-ca/archive/v1.16.1/make-ca-1.16.1.tar.gz"
+sha256  = "98c7e6fded1938b972d0177b5d5e925d318be87f84ee9e4cad680656a8c29414"
+
+# BLFS: remove opção -t obsoleta do mktemp no script
+pre_build = [
+    "sed '/mktemp/s/-t //' -i make-ca",
+]
+
+# Build: simplesmente `make install` + cria diretório /etc/ssl/local
+# O BLFS não compila nada — só instala o script.
+build_system = "custom"
+steps = [
+    "echo 'make-ca é só um script — nada a compilar'",
+]
+install_steps = [
+    "make install",
+    "install -vdm 755 $DESTDIR/etc/ssl/local",
+    "install -vdm 755 $DESTDIR/etc/pki/anchors",
+]
+
+# Após instalar o script, executa uma vez para gerar os trust stores
+# (requer internet para baixar certdata.txt da Mozilla).
+post_install = [
+    """# Gera trust store inicial — requer internet para baixar certdata.txt
+    # Skip silencioso se falhar (ex: ambiente offline); pode ser rodado depois com:
+    #   sudo /usr/sbin/make-ca
+    /usr/sbin/make-ca --root 2>/dev/null || echo "  (make-ca: trust store será gerado posteriormente)" """,
+]

@@ -1,0 +1,22 @@
+# util-macros-1.20.2 — macros m4 do X.org (pkg.m4 e similares)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/x/util-macros.html
+# Sem deps externas. Base para todos os pacotes Xorg.
+
+name         = "util-macros"
+version      = "1.20.2"
+description  = "Macros m4 do X.org (pkg.m4, xorg-macros.m4) — base para todos os pacotes Xorg"
+homepage     = "https://xorg.freedesktop.org/"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "any"
+
+depends       = []
+optional_deps = []
+
+source  = "https://www.x.org/pub/individual/util/util-macros-1.20.2.tar.xz"
+sha256  = "9ac269eba24f672d7d7b3574e4be5f333d13f04a7712303b1821b2a51ac82e8e"
+
+build_system   = "autotools"
+configure_args = []

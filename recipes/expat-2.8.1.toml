@@ -1,0 +1,31 @@
+# expat-2.8.1 — biblioteca C para parsing de XML (streaming, SAX)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/expat.html
+# Sem dependências externas (além do toolchain LFS).
+
+name         = "expat"
+version      = "2.8.1"
+description  = "Biblioteca C para parsing de XML (streaming, SAX)"
+homepage     = "https://libexpat.github.io/"
+license      = "MIT"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://github.com/libexpat/libexpat/releases/download/R_2_8_1/expat-2.8.1.tar.xz"
+sha256  = "10b195ee78160a908388180a8fe3603d4e9a12f4755fbf5f3816b23a9d750da0"
+
+# LFS:
+#   ./configure --prefix=/usr --disable-static --docdir=...
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = [
+    "--disable-static",
+    "--docdir=/usr/share/doc/expat-2.8.1",
+]
+
+post_install = ["ldconfig"]

@@ -1,0 +1,29 @@
+# vala-0.56.19 — compilador Vala (gera C a partir de Vala)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/vala.html
+# Required: glib (com receita neste conjunto).
+# Recommended: Graphviz (para valadoc) — agora incluso neste conjunto.
+
+name         = "vala"
+version      = "0.56.19"
+description  = "Compilador Vala — gera C a partir da linguagem Vala, com bindings para GObject"
+homepage     = "https://wiki.gnome.org/Projects/Vala"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["glib", "gobject-introspection", "graphviz"]
+optional_deps = []
+
+source  = "https://download.gnome.org/sources/vala/0.56/vala-0.56.19.tar.xz"
+sha256  = "5ad7cbbfcc0de61b403d6797c9ef60455bfbebd8e162aec33b5b0b097adfb9d5"
+
+# BLFS:
+#   ./configure --prefix=/usr
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = []
+
+post_install = ["ldconfig"]

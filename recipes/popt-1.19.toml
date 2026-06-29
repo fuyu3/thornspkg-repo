@@ -1,0 +1,24 @@
+# popt-1.19 — biblioteca para parsing de opções de linha de comando
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/popt.html
+# Sem dependências (além do LFS base).
+
+name         = "popt"
+version      = "1.19"
+description  = "Biblioteca para parsing de opções de linha de comando (usada por rpm, newt, etc.)"
+homepage     = "https://github.com/rpm-software-management/popt"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://ftp.osuosl.org/pub/rpm/popt/releases/popt-1.x/popt-1.19.tar.gz"
+sha256  = "c25a4838fc8e4c1c8aacb8bd620edb3084a3d63bf8987fdad3ca2758c63240f9"
+
+build_system   = "autotools"
+configure_args = ["--disable-static"]
+
+post_install = ["ldconfig"]

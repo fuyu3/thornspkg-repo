@@ -1,0 +1,40 @@
+# curl-8.21.0 — utilitário e biblioteca para transferência de arquivos via URL
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/basicnet/curl.html
+# Deps obrigatórias: OpenSSL (presente em LFS).
+# Recommended: libpsl (com receita neste conjunto), nghttp2 (com receita neste conjunto).
+
+name         = "curl"
+version      = "8.21.0"
+description  = "Biblioteca e utilitário para transferência de arquivos via URL (HTTP/HTTPS/FTP/...)"
+homepage     = "https://curl.se/"
+license      = "curl"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+# OpenSSL, libpsl, nghttp2 e libssh2 — todos com receitas neste conjunto.
+depends       = ["openssl", "libpsl", "nghttp2", "libssh2"]
+optional_deps = []
+
+source  = "https://curl.se/download/curl-8.21.0.tar.xz"
+sha256  = "aa1b66a70eace83dc624508745646c08ae561de512ab403adffb93ac87fc72e6"
+
+# BLFS:
+#   ./configure --prefix=/usr --disable-static --with-openssl --with-ca-path=/etc/ssl/certs
+#   make
+#   make install
+#   (copia docs)
+build_system   = "autotools"
+configure_args = [
+    "--disable-static",
+    "--with-openssl",
+    "--with-ca-path=/etc/ssl/certs",
+]
+
+# Documentação extra (opcional mas recomendada pelo BLFS).
+post_install = [
+    "ldconfig",
+    """install -v -d /usr/share/doc/curl-8.21.0 &&
+        cp -v -R docs -T /usr/share/doc/curl-8.21.0 2>/dev/null || true""",
+]

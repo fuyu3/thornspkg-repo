@@ -1,0 +1,24 @@
+# libXdmcp-1.1.5 — biblioteca X Display Manager Control Protocol (XDMCP)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/x/libXdmcp.html
+# Deps: util-macros, xcb-proto, libxau (transitiva via Xorg build).
+
+name         = "libxdmcp"
+version      = "1.1.5"
+description  = "Biblioteca X Display Manager Control Protocol (XDMCP) — usada por libxcb"
+homepage     = "https://xorg.freedesktop.org/"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["util-macros", "xcb-proto", "libxau"]
+optional_deps = []
+
+source  = "https://www.x.org/pub/individual/lib/libXdmcp-1.1.5.tar.xz"
+sha256  = "d8a5222828c3adab70adf69a5583f1d32eb5ece04304f7f8392b6a353aa2228c"
+
+build_system   = "autotools"
+configure_args = ["--disable-static", "--docdir=/usr/share/doc/libXdmcp-1.1.5"]
+
+post_install = ["ldconfig"]

@@ -1,0 +1,43 @@
+# freetype-2.14.3 — biblioteca de renderização de fontes TrueType/OpenType
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/freetype2.html
+# Deps: harfbuzz (Recommended), libpng (Recommended), which (Recommended).
+# Todos inclusos com receitas neste conjunto.
+
+name         = "freetype"
+version      = "2.14.3"
+description  = "Biblioteca de renderização de fontes TrueType/OpenType — base para fontconfig, pango, etc."
+homepage     = "https://freetype.org/"
+license      = "FTL OR GPL-2.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+# HarfBuzz, libpng e which são Recommended pelo BLFS.
+# HarfBuzz é mutualmente dependente: freetype precisa de harfbuzz e vice-versa.
+# BLFS manda construir harfbuzz primeiro (sem freetype), depois freetype (com harfbuzz),
+# e eventualmente harfbuzz rebuild com freetype. Aqui assumimos harfbuzz já instalado.
+depends       = ["harfbuzz", "libpng", "which"]
+optional_deps = []
+
+source  = "https://ftp.osuosl.org/pub/blfs/conglomeration/freetype/freetype-2.14.3.tar.xz"
+sha256  = "36bc4f1cc413335368ee656c42afca65c5a3987e8768cc28cf11ba775e785a5f"
+
+# BLFS: 2 seds para configurar módulos e subpixel rendering
+pre_build = [
+    "sed -ri 's:.*(AUX_MODULES.*valid):\\1:' modules.cfg",
+    "sed -r 's:.*(#.*SUBPIXEL_RENDERING) .*:\\1:' -i include/freetype/config/ftoption.h",
+]
+
+# BLFS:
+#   ./configure --prefix=/usr --disable-static --enable-freetype-config --with-harfbuzz=dynamic
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = [
+    "--disable-static",
+    "--enable-freetype-config",
+    "--with-harfbuzz=dynamic",
+]
+
+post_install = ["ldconfig"]

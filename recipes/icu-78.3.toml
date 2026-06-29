@@ -1,0 +1,35 @@
+# icu-78.3 — International Components for Unicode
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/icu.html
+# Sem dependências externas (além do LFS base).
+# Tarball extrai para diretório "icu" (não "icu4c-78.3"), e dentro dele
+# há um subdiretório "source/" onde o configure está.
+
+name         = "icu"
+version      = "78.3"
+description  = "International Components for Unicode — bibliotecas C/C++ para Unicode"
+homepage     = "https://icu.unicode.org/"
+license      = "ICU"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://github.com/unicode-org/icu/releases/download/release-78.3/icu4c-78.3-sources.tgz"
+sha256  = "3a2e7a47604ba702f345878308e6fefeca612ee895cf4a5f222e7955fabfe0c0"
+
+# BLFS:
+#   cd source
+#   ./configure --prefix=/usr
+#   make
+#   make install
+build_system = "custom"
+steps = [
+    "cd source && ./configure --prefix=/usr",
+    "cd source && make",
+]
+install_steps = ["cd source && make install"]
+
+post_install = ["ldconfig"]

@@ -1,0 +1,46 @@
+# nspr-4.39 — Netscape Portable Runtime
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/nspr.html
+# Sem dependências externas (além do LFS base).
+# BLFS aplica 2 seds no Makefile antes do configure.
+
+name         = "nspr"
+version      = "4.39"
+description  = "Netscape Portable Runtime — base para NSS"
+homepage     = "https://developer.mozilla.org/docs/Mozilla/Projects/NSPR"
+license      = "MPL-2.0"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://archive.mozilla.org/pub/nspr/releases/v4.39/src/nspr-4.39.tar.gz"
+sha256  = "bbd02ee87a55676063a63e5bc819e0227de2666b47307b2a0134414cdf42368e"
+
+# O tarball extrai para "nspr-4.39/nspr/"; o BLFS faz "cd nspr" dentro.
+# thornspkg entra no dir raiz extraído, então o pre_build roda em nspr-4.39/.
+# Os seds precisam rodar dentro de nspr/.
+pre_build = [
+    # Patch Makefile.in e rules.mk dentro de nspr/
+    """cd nspr && \\
+    sed -i '/^RELEASE/s|^|#|' pr/src/misc/Makefile.in && \\
+    sed -i 's|$(LIBRARY) ||' config/rules.mk""",
+]
+
+# BLFS:
+#   cd nspr
+#   ./configure --prefix=/usr --with-mozilla --with-pthreads \
+#       $([ $(uname -m) = x86_64 ] && echo --enable-64bit)
+#   make
+#   make install
+build_system = "custom"
+steps = [
+    """cd nspr && ./configure --prefix=/usr --with-mozilla --with-pthreads \\
+        $([ $(uname -m) = x86_64 ] && echo --enable-64bit)""",
+    "cd nspr && make",
+]
+install_steps = ["cd nspr && make install"]
+
+post_install = ["ldconfig"]

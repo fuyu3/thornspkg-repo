@@ -1,0 +1,51 @@
+# bzip2-1.0.8 — biblioteca e utilitário de compressão BWT (bzip2)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/bzip2.html
+# Sem dependências externas. Não usa autotools — usa Makefile direto.
+
+name         = "bzip2"
+version      = "1.0.8"
+description  = "Compressor e biblioteca bzip2 (Burrows-Wheeler Transform)"
+homepage     = "https://www.sourceware.org/bzip2/"
+license      = "BSD-4-Clause"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://ftp.openbsd.org/pub/OpenBSD/distfiles/bzip2-1.0.8.tar.gz"
+sha256  = "264564d0e703b19ae29a1e9aa23d4e9aa34c43a29d6b4a3c4c9131075c8432c5"
+
+# LFS: aplica patch de instalação de docs + 2 seds no Makefile
+# Patch não incluído (opcional); os seds são replicados no pre_build.
+pre_build = [
+    # Garante symlinks relativos (não absolutos)
+    "sed -i 's@\\(ln -s -f \\)$(PREFIX)/bin/@\\1@' Makefile",
+    # Move man pages para /usr/share/man (não /usr/man)
+    "sed -i 's@(PREFIX)/man@(PREFIX)/share/man@g' Makefile",
+]
+
+# LFS:
+#   make -f Makefile-libbz2_so
+#   make clean
+#   make
+#   make PREFIX=/usr install
+#   cp -av libbz2.so.* /usr/lib
+#   ln -sfv libbz2.so.1.0.8 /usr/lib/libbz2.so
+#   ln -sfv libbz2.so.1.0.8 /usr/lib/libbz2.so.1   (compatibilidade)
+build_system = "custom"
+steps = [
+    "make -f Makefile-libbz2_so",
+    "make clean",
+    "make",
+]
+install_steps = [
+    """make PREFIX=/usr install && \\
+    cp -av libbz2.so.* /usr/lib && \\
+    ln -sfv libbz2.so.1.0.8 /usr/lib/libbz2.so && \\
+    ln -sfv libbz2.so.1.0.8 /usr/lib/libbz2.so.1""",
+]
+
+post_install = ["ldconfig"]

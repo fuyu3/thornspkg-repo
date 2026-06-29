@@ -1,0 +1,28 @@
+# libpaper-2.2.8 — biblioteca para gerenciamento de tamanho de papel
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/libpaper.html
+# Sem deps externas.
+
+name         = "libpaper"
+version      = "2.2.8"
+description  = "Biblioteca para gerenciamento de tamanho de papel — usada por ghostscript, cups, etc."
+homepage     = "https://github.com/rrthomas/libpaper"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://github.com/rrthomas/libpaper/releases/download/v2.2.8/libpaper-2.2.8.tar.gz"
+sha256  = "1e330571690191874eca415ec76889dd11bab9887a2302d6a3665cd081c4d77b"
+
+build_system   = "autotools"
+configure_args = [
+    "--sysconfdir=/etc",
+    "--disable-static",
+    "--docdir=/usr/share/doc/libpaper-2.2.8",
+]
+
+post_install = ["ldconfig"]

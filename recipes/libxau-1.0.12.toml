@@ -1,0 +1,24 @@
+# libXau-1.0.12 — biblioteca X Authority (XAU)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/x/libXau.html
+# Deps: util-macros (do X.org).
+
+name         = "libxau"
+version      = "1.0.12"
+description  = "Biblioteca X Authority (XAU) — base para libxcb e X11"
+homepage     = "https://xorg.freedesktop.org/"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["util-macros"]
+optional_deps = []
+
+source  = "https://www.x.org/pub/individual/lib/libXau-1.0.12.tar.xz"
+sha256  = "74d0e4dfa3d39ad8939e99bda37f5967aba528211076828464d2777d477fc0fb"
+
+build_system   = "autotools"
+configure_args = ["--disable-static", "--docdir=/usr/share/doc/libXau-1.0.12"]
+
+post_install = ["ldconfig"]

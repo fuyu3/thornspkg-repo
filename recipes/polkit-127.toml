@@ -1,0 +1,42 @@
+# polkit-127 — PolicyKit (autorização para usuários não-root)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/postlfs/polkit.html
+# Required: duktape (com receita neste conjunto), glib (com receita neste conjunto)
+# Recommended: libxslt, Linux-PAM (assumidos presentes em LFS/BLFS).
+
+name         = "polkit"
+version      = "127"
+description  = "PolicyKit — framework de autorização para privilégios não-root"
+homepage     = "https://github.com/polkit-org/polkit"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["duktape", "glib", "gobject-introspection", "linux-pam"]
+# libxslt é Recommended mas já transitive via glib.
+optional_deps = []
+
+source  = "https://github.com/polkit-org/polkit/archive/127/polkit-127.tar.gz"
+sha256  = "9b7bc16f086479dcc626c575976568ba4a85d34297a750d8ab3d2e57f6d8b988"
+
+# Cria usuário/grupo polkitd antes do build (BLFS faz como root).
+pre_build = [
+    """groupadd -fg 27 polkitd 2>/dev/null || true""",
+    """useradd -c "PolicyKit Daemon Owner" -d /etc/polkit-1 -u 27 -g polkitd -s /bin/false polkitd 2>/dev/null || true""",
+]
+
+# BLFS:
+#   mkdir build && cd build
+#   meson setup .. --prefix=/usr --buildtype=release -D man=true -D session_tracking=logind -D tests=true
+#   ninja
+#   ninja install
+build_system   = "meson"
+configure_args = [
+    "--buildtype=release",
+    "-D man=true",
+    "-D session_tracking=logind",
+    "-D tests=false",   # tests=true requer dbus-python e dbusmock
+]
+
+post_install = ["ldconfig"]

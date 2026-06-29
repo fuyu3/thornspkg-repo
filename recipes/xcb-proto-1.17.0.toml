@@ -1,0 +1,22 @@
+# xcb-proto-1.17.0 — descrições XML do protocolo XCB (X C Binding)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/x/xcb-proto.html
+# Sem deps externas (além de Python para gerar código).
+
+name         = "xcb-proto"
+version      = "1.17.0"
+description  = "Descrições XML do protocolo XCB — base para libxcb e bindings"
+homepage     = "https://xcb.freedesktop.org/"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "any"
+
+depends       = ["python"]
+optional_deps = []
+
+source  = "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-1.17.0.tar.xz"
+sha256  = "2c1bacd2110f4799f74de6ebb714b94cf6f80fb112316b1219480fd22562148c"
+
+build_system   = "autotools"
+configure_args = []

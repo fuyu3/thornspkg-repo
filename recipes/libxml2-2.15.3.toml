@@ -1,0 +1,40 @@
+# libxml2-2.15.3 — biblioteca XML C (parser, validador)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/libxml2.html
+# Recommended: ICU (com receita neste conjunto).
+# BLFS faz um sed em meson.build para remover chamada desnecessária ao git.
+
+name         = "libxml2"
+version      = "2.15.3"
+description  = "Biblioteca XML C — parser, validador e ferramentas (xmllint, etc.)"
+homepage     = "https://gitlab.gnome.org/GNOME/libxml2"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+# ICU é Recommended — incluir para suporte Unicode completo.
+depends       = ["icu"]
+optional_deps = []
+
+source  = "https://download.gnome.org/sources/libxml2/2.15/libxml2-2.15.3.tar.xz"
+sha256  = "78262a6e7ac170d6528ebfe2efccdf220191a5af6a6cd61ea4a9a9a5042c7a07"
+
+# BLFS: remove chamada git desnecessária em meson.build
+pre_build = [
+    """sed -i "/'git'/,+3d" meson.build""",
+]
+
+# BLFS:
+#   mkdir build && cd build
+#   meson setup .. --prefix=/usr --buildtype=release -D history=enabled -D icu=enabled
+#   ninja
+#   ninja install
+build_system   = "meson"
+configure_args = [
+    "--buildtype=release",
+    "-D history=enabled",
+    "-D icu=enabled",
+]
+
+post_install = ["ldconfig"]

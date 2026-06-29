@@ -1,0 +1,85 @@
+# wpa_supplicant-2.11 — supplicant WPA/WPA2/WPA3 para WiFi
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/basicnet/wpa_supplicant.html
+# Required: OpenSSL (do LFS). Recommended: libnl (com receita neste conjunto).
+# Runtime: kernel wireless drivers.
+#
+# O patch wpa_supplicant-2.11-openssl_4_fixes-1.patch é baixado automaticamente
+# no pre_build e aplicado.
+
+name         = "wpa_supplicant"
+version      = "2.11"
+description  = "Supplicant WPA/WPA2/WPA3 — usado pelo NetworkManager para WiFi"
+homepage     = "https://w1.fi/wpa_supplicant/"
+license      = "BSD-3-Clause"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+# OpenSSL e libnl — ambos com receitas neste conjunto agora.
+depends       = ["openssl", "libnl"]
+optional_deps = []
+
+source  = "https://w1.fi/releases/wpa_supplicant-2.11.tar.gz"
+sha256  = "912ea06f74e30a8e36fbb68064d6cdff218d8d591db0fc5d75dee6c81ac7fc0a"
+
+# BLFS: cria wpa_supplicant/.config com opções para WiFi padrão + DBus
+# (necessário para integrar com NetworkManager).
+pre_build = [
+    # 1. Configuração base
+    """cat > wpa_supplicant/.config << 'EOF'
+CONFIG_BACKEND=file
+CONFIG_CTRL_IFACE=y
+CONFIG_DEBUG_FILE=y
+CONFIG_DEBUG_SYSLOG=y
+CONFIG_DEBUG_SYSLOG_FACILITY=LOG_DAEMON
+CONFIG_DRIVER_NL80211=y
+CONFIG_DRIVER_WEXT=y
+CONFIG_DRIVER_WIRED=y
+CONFIG_EAP_GTC=y
+CONFIG_EAP_LEAP=y
+CONFIG_EAP_MD5=y
+CONFIG_EAP_MSCHAPV2=y
+CONFIG_EAP_OTP=y
+CONFIG_EAP_PEAP=y
+CONFIG_EAP_TLS=y
+CONFIG_EAP_TTLS=y
+CONFIG_IEEE8021X_EAPOL=y
+CONFIG_IPV6=y
+CONFIG_LIBNL32=y
+CONFIG_PEERKEY=y
+CONFIG_PKCS12=y
+CONFIG_READLINE=y
+CONFIG_SMARTCARD=y
+CONFIG_WPS=y
+CFLAGS += -I/usr/include/libnl3
+EOF""",
+    # 2. Opções DBus (necessárias para NetworkManager)
+    """cat >> wpa_supplicant/.config << 'EOF'
+CONFIG_CTRL_IFACE_DBUS=y
+CONFIG_CTRL_IFACE_DBUS_NEW=y
+CONFIG_CTRL_IFACE_DBUS_INTRO=y
+EOF""",
+    # 3. Patch de compatibilidade com OpenSSL 4.x — baixado automaticamente
+    """mkdir -p /tmp/thorn-patches && \\
+    curl -sL --max-time 30 -o /tmp/thorn-patches/wpa_supplicant-2.11-openssl_4_fixes-1.patch \\
+        "https://www.linuxfromscratch.org/patches/blfs/svn/wpa_supplicant-2.11-openssl_4_fixes-1.patch" && \\
+    echo "092fa4547ff53f79b2979aed68cbeaeaa79242f3677d19d5b67c88a7dcd8924e  /tmp/thorn-patches/wpa_supplicant-2.11-openssl_4_fixes-1.patch" | sha256sum -c - && \\
+    patch -Np1 -i /tmp/thorn-patches/wpa_supplicant-2.11-openssl_4_fixes-1.patch""",
+]
+
+# BLFS:
+#   cd wpa_supplicant
+#   make BINDIR=/usr/sbin LIBDIR=/usr/lib
+#   install -v -m755 wpa_{cli,_supplicant} /usr/sbin/
+#   install -v -m644 dbus/fi.epitest.hostap.WPASupplicant.service /usr/share/dbus-1/system-services/
+#   ... (mais instalações)
+build_system = "custom"
+steps = [
+    "cd wpa_supplicant && make BINDIR=/usr/sbin LIBDIR=/usr/lib",
+]
+install_steps = [
+    """cd wpa_supplicant && install -v -m755 wpa_{cli,_supplicant} $DESTDIR/usr/sbin/ && install -v -m644 dbus/fi.epitest.hostap.WPASupplicant.service $DESTDIR/usr/share/dbus-1/system-services/ && install -v -m644 dbus/fi.w1.wpa_supplicant1.service $DESTDIR/usr/share/dbus-1/system-services/ && install -v -d $DESTDIR/etc/dbus-1/system.d && install -v -m644 dbus/dbus-wpa_supplicant.conf $DESTDIR/etc/dbus-1/system.d/wpa_supplicant.conf && install -v -m644 wpa_supplicant.conf $DESTDIR/etc/wpa_supplicant.conf""",
+]
+
+post_install = ["ldconfig"]

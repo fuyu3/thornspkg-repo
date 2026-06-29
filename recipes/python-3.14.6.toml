@@ -1,0 +1,61 @@
+# python-3.14.6 — linguagem Python 3
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/Python.html
+# Deps: openssl, zlib, expat (system, via --with-system-expat), libffi, ncurses,
+#        readline, gdbm, sqlite, bzip2, xz.
+#
+# AVISO: --enable-optimizations faz 2 builds (com PGO profiling). Demora
+# ~30-60 min em máquina razoável. Reduzir se necessário.
+#
+# O patch Python-3.14.6-openssl_4-1.patch é baixado automaticamente no pre_build.
+
+name         = "python"
+version      = "3.14.6"
+description  = "Linguagem Python 3 — interpretador, stdlib, pip3"
+homepage     = "https://www.python.org/"
+license      = "PSF-2.0"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+# Todas as deps com receitas neste conjunto:
+depends       = [
+    "openssl",   # ssl, hashlib, https
+    "zlib",      # zlib module
+    "expat",     # pyexpat (system version via --with-system-expat)
+    "libffi",    # ctypes
+    "ncurses",   # curses module
+    "readline",  # readline (no interactive shell)
+    "gdbm",      # dbm.gnu, dbm.ndbm
+    "sqlite",    # sqlite3 module
+    "bzip2",     # bz2 module
+    "xz",        # lzma module
+]
+optional_deps = []
+
+source  = "https://www.python.org/ftp/python/3.14.6/Python-3.14.6.tar.xz"
+sha256  = "143b1dddefaec3bd2e21e3b839b34a2b7fb9842272883c576420d605e9f30c63"
+
+# LFS: aplica patch de compatibilidade com OpenSSL 4 — baixado automaticamente
+pre_build = [
+    """mkdir -p /tmp/thorn-patches && \\
+    curl -sL --max-time 30 -o /tmp/thorn-patches/Python-3.14.6-openssl_4-1.patch \\
+        "https://www.linuxfromscratch.org/patches/lfs/development/Python-3.14.6-openssl_4-1.patch" && \\
+    echo "707a0c457192ac2f3b5b8a51481bc5ebd12db22d57c1dbe0256138ee6e070792  /tmp/thorn-patches/Python-3.14.6-openssl_4-1.patch" | sha256sum -c - && \\
+    patch -Np1 -i /tmp/thorn-patches/Python-3.14.6-openssl_4-1.patch""",
+]
+
+# LFS:
+#   ./configure --prefix=/usr --enable-shared --with-system-expat \
+#       --enable-optimizations --without-static-libpython
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = [
+    "--enable-shared",
+    "--with-system-expat",
+    "--enable-optimizations",
+    "--without-static-libpython",
+]
+
+post_install = ["ldconfig"]

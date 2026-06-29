@@ -1,0 +1,77 @@
+# systemd-260.2 — sistema init e gerenciador de serviços (rebuild do LFS)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/systemd.html
+#
+# IMPORTANTE: systemd JÁ está instalado pelo LFS base (capítulo 9 do LFS).
+# Esta receita faz o REBUILD no estilo BLFS para adicionar suporte a:
+#   - pam_systemd.so (requer Linux-PAM)
+#   - systemd-logind completo (para polkit e NetworkManager usarem)
+#
+# AVISO: rebuild do systemd pode quebrar o boot se feito incorretamente.
+# Faça backup do initrd/kernel cmdline antes. Em ambiente live, prefira
+# instalar num chroot ou snapshot.
+
+name         = "systemd"
+version      = "260.2"
+description  = "systemd — sistema init, gerenciador de serviços e devices (rebuild BLFS com PAM)"
+homepage     = "https://systemd.io/"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+# Linux-PAM é Recommended pelo BLFS — neste conjunto, parte do stack.
+# Polkit é Recommended (runtime) pelo BLFS — adicionado como optional_deps
+# (polkit depende de linux-pam, mas não de systemd, então não há ciclo).
+# Pacotes do LFS base (util-linux, libcap, etc.) são assumidamente presentes.
+depends       = ["linux-pam"]
+optional_deps = ["polkit"]
+
+source  = "https://github.com/systemd/systemd/archive/v260.2/systemd-260.2.tar.gz"
+sha256  = "71a9ed11cf773478b0d7a16cd96e39ca3c3939ab37ed9a8ee814c31ea9b4f2b5"
+
+# BLFS:
+#   rm -fv /usr/lib/systemd/system/systemd-update-utmp-runlevel.service  (se existe versão anterior)
+#   sed -i -e 's/GROUP="render"/GROUP="video"/' -e 's/GROUP="sgx", //' rules.d/50-udev-default.rules.in
+pre_build = [
+    """rm -fv /usr/lib/systemd/system/systemd-update-utmp-runlevel.service 2>/dev/null || true""",
+    """sed -i -e 's/GROUP="render"/GROUP="video"/' \\
+        -e 's/GROUP="sgx", //' rules.d/50-udev-default.rules.in""",
+]
+
+# BLFS:
+#   mkdir build && cd build
+#   meson setup .. --prefix=/usr --buildtype=release \
+#       -D default-dnssec=no -D firstboot=false -D install-tests=false \
+#       -D ldconfig=false -D man=auto -D sysusers=false -D rpmmacrosdir=no \
+#       -D homed=disabled -D mode=release -D pam=enabled -D pamconfdir=/etc/pam.d \
+#       -D dev-kvm-mode=0660 -D nobody-group=nogroup -D sysupdate=disabled \
+#       -D ukify=disabled -D docdir=/usr/share/doc/systemd-260.2
+#   ninja
+#   ninja install
+build_system   = "meson"
+configure_args = [
+    "--buildtype=release",
+    "-D default-dnssec=no",
+    "-D firstboot=false",
+    "-D install-tests=false",
+    "-D ldconfig=false",
+    "-D man=auto",
+    "-D sysusers=false",
+    "-D rpmmacrosdir=no",
+    "-D homed=disabled",
+    "-D mode=release",
+    "-D pam=enabled",
+    "-D pamconfdir=/etc/pam.d",
+    "-D dev-kvm-mode=0660",
+    "-D nobody-group=nogroup",
+    "-D sysupdate=disabled",
+    "-D ukify=disabled",
+    "-D docdir=/usr/share/doc/systemd-260.2",
+]
+
+post_install = [
+    "ldconfig",
+    # Recarrega daemon systemd se já estiver rodando (no-op em chroot)
+    "systemctl daemon-reexec 2>/dev/null || true",
+]

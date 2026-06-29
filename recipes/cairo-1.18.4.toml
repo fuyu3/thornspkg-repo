@@ -1,0 +1,29 @@
+# cairo-1.18.4 — biblioteca gráfica 2D (PDF, SVG, PNG, Xlib, Win32)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/x/cairo.html
+# Deps Required: pixman, libpng. Recommended: fontconfig, glib, xorg libs.
+
+name         = "cairo"
+version      = "1.18.4"
+description  = "Biblioteca gráfica 2D (PDF, SVG, PNG, Xlib) — base para pango, gtk, etc."
+homepage     = "https://www.cairographics.org/"
+license      = "LGPL-2.1-or-later OR MPL-1.1"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["pixman", "libpng", "fontconfig", "glib"]
+optional_deps = []
+
+source  = "https://www.cairographics.org/releases/cairo-1.18.4.tar.xz"
+sha256  = "445ed8208a6e4823de1226a74ca319d3600e83f6369f99b14265006599c32ccb"
+
+# BLFS:
+#   mkdir build && cd build
+#   meson setup --prefix=/usr --buildtype=release ..
+#   ninja
+#   ninja install
+build_system   = "meson"
+configure_args = ["--buildtype=release"]
+
+post_install = ["ldconfig"]

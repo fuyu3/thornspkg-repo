@@ -1,0 +1,24 @@
+# fribidi-1.0.16 — biblioteca Unicode Bidirectional Algorithm
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/fribidi.html
+# Sem deps externas. Dep de pango.
+
+name         = "fribidi"
+version      = "1.0.16"
+description  = "Biblioteca Unicode Bidirectional Algorithm — usada por pango, gtk, etc."
+homepage     = "https://github.com/fribidi/fribidi"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://github.com/fribidi/fribidi/releases/download/v1.0.16/fribidi-1.0.16.tar.xz"
+sha256  = "1b1cde5b235d40479e91be2f0e88a309e3214c8ab470ec8a2744d82a5a9ea05c"
+
+build_system   = "meson"
+configure_args = ["--buildtype=release"]
+
+post_install = ["ldconfig"]

@@ -1,0 +1,39 @@
+# pygobject-3.56.3 — bindings Python para GObject
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/python-modules.html#pygobject3
+# Required: glib (com introspection).
+# Recommended: PyCairo — não incluído (fica como opcional).
+
+name         = "pygobject"
+version      = "3.56.3"
+description  = "Bindings Python para a classe GObject do GLib"
+homepage     = "https://pygobject.gnome.org/"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+# Todas as deps com receitas neste conjunto.
+# PyCairo agora incluso — habilitado (default do meson).
+depends       = ["glib", "gobject-introspection", "python", "pycairo"]
+optional_deps = []
+
+source  = "https://download.gnome.org/sources/pygobject/3.56/pygobject-3.56.3.tar.gz"
+sha256  = "12760e4a0e3d04b6eb95e06f7a27e362c826d567ea613373a92c003b6c70d2d6"
+
+# BLFS remove 2 testes que dependem de GTK4 (não instalado):
+pre_build = [
+    "[ -f tests/test_gdbus.py ] && mv -v tests/test_gdbus.py{,.nouse} || true",
+    "[ -f tests/test_overrides_gtk.py ] && mv -v tests/test_overrides_gtk.py{,.nouse} || true",
+]
+
+# BLFS:
+#   mkdir build && cd build
+#   meson setup --prefix=/usr --buildtype=release ..
+#   ninja
+#   ninja install
+# PyCairo agora incluso — sem -D pycairo=disabled.
+build_system   = "meson"
+configure_args = ["--buildtype=release"]
+
+post_install = ["ldconfig"]

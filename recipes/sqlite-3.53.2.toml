@@ -1,0 +1,45 @@
+# sqlite-3.53.2 — biblioteca C SQL database engine (autoconf tarball)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/sqlite.html
+# Sem deps obrigatórias. Importante para: python (sqlite3 module), nss, firefox, etc.
+#
+# NOTA: a versão do LFS é "3530200" (encoding de 3.53.2 → 3_53_2 → 3530200).
+# Tarball: sqlite-autoconf-3530200.tar.gz
+
+name         = "sqlite"
+version      = "3.53.2"
+description  = "Biblioteca C SQL database engine (autoconf tarball) — usada por python, nss, etc."
+homepage     = "https://sqlite.org/"
+license      = "Public Domain"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+# Sem deps externas obrigatórias.
+# Tcl é optional (apenas para tests) — não incluído.
+depends       = []
+optional_deps = []
+
+source  = "https://sqlite.org/2026/sqlite-autoconf-3530200.tar.gz"
+sha256  = "588ad51949419a56ebe81fe56193d510c559eb94c9a57748387860b5d3069316"
+
+# LFS:
+#   ./configure --prefix=/usr --disable-static --enable-fts{4,5} \
+#       CPPFLAGS="-D SQLITE_ENABLE_COLUMN_METADATA=1 \
+#                 -D SQLITE_ENABLE_UNLOCK_NOTIFY=1 \
+#                 -D SQLITE_ENABLE_DBSTAT_VTAB=1 \
+#                 -D SQLITE_SECURE_DELETE=1"
+#   make LDFLAGS.rpath=""
+#   make install
+build_system = "custom"
+steps = [
+    """./configure --prefix=/usr --disable-static --enable-fts4 --enable-fts5 \\
+        CPPFLAGS="-D SQLITE_ENABLE_COLUMN_METADATA=1 \\
+                  -D SQLITE_ENABLE_UNLOCK_NOTIFY=1 \\
+                  -D SQLITE_ENABLE_DBSTAT_VTAB=1 \\
+                  -D SQLITE_SECURE_DELETE=1" """,
+    """make LDFLAGS.rpath="" """,
+]
+install_steps = ["make install"]
+
+post_install = ["ldconfig"]

@@ -1,0 +1,54 @@
+# gpm-1.20.7 — General Purpose Mouse (mouse driver para console Linux)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/gpm.html
+# Sem deps externas (além do toolchain).
+# Required: 2 patches (consolidated + gcc15_fixes) — auto-baixados.
+
+name         = "gpm"
+version      = "1.20.7"
+description  = "General Purpose Mouse — driver de mouse para console Linux (cut&paste no TTY)"
+homepage     = "https://nico.schottelius.org/software/gpm/"
+license      = "GPL-2.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://anduin.linuxfromscratch.org/BLFS/gpm/gpm-1.20.7.tar.bz2"
+sha256  = "f011b7dc7afb824e0a017b89b7300514e772853ece7fc4ee640310889411a48d"
+
+# BLFS: aplica 2 patches (auto-baixados e verificados)
+pre_build = [
+    """mkdir -p /tmp/thorn-patches && \\
+    curl -sL --max-time 30 -o /tmp/thorn-patches/gpm-1.20.7-consolidated-1.patch \\
+        "https://www.linuxfromscratch.org/patches/blfs/svn/gpm-1.20.7-consolidated-1.patch" && \\
+    curl -sL --max-time 30 -o /tmp/thorn-patches/gpm-1.20.7-gcc15_fixes-1.patch \\
+        "https://www.linuxfromscratch.org/patches/blfs/svn/gpm-1.20.7-gcc15_fixes-1.patch" && \\
+    patch -Np1 -i /tmp/thorn-patches/gpm-1.20.7-consolidated-1.patch && \\
+    patch -Np1 -i /tmp/thorn-patches/gpm-1.20.7-gcc15_fixes-1.patch""",
+]
+
+# BLFS:
+#   ./autogen.sh
+#   ./configure --prefix=/usr --sysconfdir=/etc ac_cv_path_emacs=no
+#   make
+#   make install
+#   rm -fv /usr/lib/libgpm.a
+#   ln -sfv libgpm.so.2.1.0 /usr/lib/libgpm.so
+#   install -v -m644 conf/gpm-root.conf /etc
+build_system = "custom"
+steps = [
+    "./autogen.sh",
+    "./configure --prefix=/usr --sysconfdir=/etc ac_cv_path_emacs=no",
+    "make",
+]
+install_steps = [
+    """make install && \\
+    rm -fv /usr/lib/libgpm.a && \\
+    ln -sfv libgpm.so.2.1.0 /usr/lib/libgpm.so && \\
+    install -v -m644 conf/gpm-root.conf /etc 2>/dev/null || true""",
+]
+
+post_install = ["ldconfig"]

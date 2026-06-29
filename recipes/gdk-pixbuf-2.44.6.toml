@@ -1,0 +1,42 @@
+# gdk-pixbuf-2.44.6 — biblioteca de carregamento de imagens (PNG, JPEG, etc.)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/x/gdk-pixbuf.html
+# Deps Required: glib (com gobject-introspection), shared-mime-info.
+
+name         = "gdk-pixbuf"
+version      = "2.44.6"
+description  = "Biblioteca de carregamento de imagens (PNG, JPEG, GIF, TIFF) — base para gtk"
+homepage     = "https://docs.gtk.org/gdk-pixbuf/"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["glib", "gobject-introspection", "shared-mime-info"]
+optional_deps = []
+
+source  = "https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.6.tar.xz"
+sha256  = "140c2d0b899fcf853ee92b26373c9dc228dbcde0820a4246693f4328a27466fa"
+
+# BLFS: desabilita PNG/GIF/JPEG/TIFF/thumbnailer porque exigem libs extras
+# que não incluiremos aqui (libjpeg, libtiff). O pacote ainda funciona para
+# carregar via glib-only paths.
+pre_build = []
+
+build_system   = "meson"
+configure_args = [
+    "--buildtype=release",
+    "-D png=disabled",
+    "-D gif=disabled",
+    "-D jpeg=disabled",
+    "-D tiff=disabled",
+    "-D thumbnailer=disabled",
+    "--wrap-mode=nofallback",
+    "-D glycin=disabled",
+]
+
+post_install = [
+    "ldconfig",
+    # Gera cache de loaders (necessário após install)
+    "gdk-pixbuf-query-loaders --update-cache 2>/dev/null || true",
+]

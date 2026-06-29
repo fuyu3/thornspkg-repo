@@ -1,0 +1,31 @@
+# xz-5.8.3 — biblioteca e utilitário de compressão LZMA/XZ
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/xz.html
+# Sem dependências externas (além do toolchain LFS).
+
+name         = "xz"
+version      = "5.8.3"
+description  = "Compressor e biblioteca LZMA2/XZ (xz, lzma, lzcat, etc.)"
+homepage     = "https://tukaani.org/xz/"
+license      = "GPL-2.0-or-later"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://github.com/tukaani-project/xz/releases/download/v5.8.3/xz-5.8.3.tar.xz"
+sha256  = "fff1ffcf2b0da84d308a14de513a1aa23d4e9aa3464d17e64b9714bfdd0bbfb6"
+
+# LFS:
+#   ./configure --prefix=/usr --disable-static --docdir=/usr/share/doc/xz-5.8.3
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = [
+    "--disable-static",
+    "--docdir=/usr/share/doc/xz-5.8.3",
+]
+
+post_install = ["ldconfig"]

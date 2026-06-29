@@ -1,0 +1,24 @@
+# libidn2-2.3.8 — implementação da biblioteca IDN2008
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/libidn2.html
+# Deps: libunistring ( Recommended, mas na prática obrigatória para funcionalidade completa )
+
+name         = "libidn2"
+version      = "2.3.8"
+description  = "Biblioteca para manipulação de nomes de domínio internacionalizados (IDN2008)"
+homepage     = "https://www.gnu.org/software/libidn/libidn2.html"
+license      = "GPL-3.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["libunistring"]
+optional_deps = []
+
+source  = "https://mirrors.kernel.org/gnu/libidn/libidn2-2.3.8.tar.gz"
+sha256  = "f557911bf6171621e1f72ff35f5b1825bb35b52ed45325dcdee931e5d3c0787a"
+
+build_system   = "autotools"
+configure_args = ["--disable-static"]
+
+post_install = ["ldconfig"]

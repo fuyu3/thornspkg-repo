@@ -1,0 +1,25 @@
+# libpsl-0.22.0 — biblioteca para acessar a Public Suffix List (PSL)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/basicnet/libpsl.html
+# Deps: libidn2 (Recommended), libunistring (Recommended, transitiva via libidn2)
+
+name         = "libpsl"
+version      = "0.22.0"
+description  = "Biblioteca para acessar e resolver informações da Public Suffix List (PSL)"
+homepage     = "https://github.com/rockdaboot/libpsl"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+# libidn2 já traz libunistring como dep sua.
+depends       = ["libidn2", "libunistring"]
+optional_deps = []
+
+source  = "https://github.com/rockdaboot/libpsl/releases/download/0.22.0/libpsl-0.22.0.tar.gz"
+sha256  = "c45c3aa17576b99873e05a9b09a44041b065bbfa390e6d474d06fbfaeb9c7722"
+
+build_system   = "meson"
+configure_args = ["--buildtype=release"]
+
+post_install = ["ldconfig"]

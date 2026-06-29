@@ -1,0 +1,29 @@
+# libtasn1-4.21.0 — biblioteca ASN.1 (Abstract Syntax Notation One)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/libtasn1.html
+# Sem dependências externas (além do LFS base).
+# Dep de p11-kit.
+
+name         = "libtasn1"
+version      = "4.21.0"
+description  = "Biblioteca C para manipulação de estruturas ASN.1 (usada por p11-kit, GnuTLS, etc.)"
+homepage     = "https://www.gnu.org/software/libtasn1/"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://mirrors.kernel.org/gnu/libtasn1/libtasn1-4.21.0.tar.gz"
+sha256  = "1d8a444a223cc5464240777346e125de51d8e6abf0b8bac742ac84609167dc87"
+
+# BLFS:
+#   ./configure --prefix=/usr --disable-static
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = ["--disable-static"]
+
+post_install = ["ldconfig"]

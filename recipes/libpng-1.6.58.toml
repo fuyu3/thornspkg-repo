@@ -1,0 +1,27 @@
+# libpng-1.6.58 — biblioteca PNG (PNG reference library)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/libpng.html
+# Sem deps externas (além do toolchain). Patch APNG é opcional — não incluso.
+
+name         = "libpng"
+version      = "1.6.58"
+description  = "Biblioteca PNG (PNG reference library) — usada por cairo, gdk-pixbuf, etc."
+homepage     = "http://www.libpng.org/pub/png/libpng.html"
+license      = "PNG-Reference-License-Version-2"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://ftp.osuosl.org/pub/blfs/conglomeration/libpng/libpng-1.6.58.tar.xz"
+sha256  = "28eb403f51f0f7405249132cecfe82ea5c0ef97f1b32c5a65828814ae0d34775"
+
+build_system   = "autotools"
+configure_args = ["--disable-static"]
+
+post_install = [
+    "ldconfig",
+    "install -vDm644 README libpng-manual.txt -t /usr/share/doc/libpng-1.6.58 2>/dev/null || true",
+]

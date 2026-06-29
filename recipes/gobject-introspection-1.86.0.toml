@@ -1,0 +1,38 @@
+# gobject-introspection-1.86.0 — geração de introspecção para GObject
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/glib2.html (seção GObject Introspection)
+# Required: glib (este pacote instala .gir/.typelib para as .so do glib).
+# BLFS usa o tarball separado gobject-introspection-1.86.0.tar.xz extraído dentro
+# do diretório de build do glib.
+
+name         = "gobject-introspection"
+version      = "1.86.0"
+description  = "Camada de introspecção para GObject — gera .gir/.typelib usados por bindings"
+homepage     = "https://gi.readthedocs.io/"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["glib"]
+optional_deps = []
+
+source  = "https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz"
+sha256  = "920d1a3fcedeadc32acff95c2e203b319039dd4b4a08dd1a2dfd283d19c0b9ae"
+
+# BLFS:
+#   meson setup gobject-introspection-1.86.0 gi-build --prefix=/usr --buildtype=release
+#   ninja -C gi-build
+#   ninja -C gi-build install
+#
+# O tarball extrai para "gobject-introspection-1.86.0/". O meson é invocado
+# fora do diretório do source, criando gi-build como sibling. O thornspkg
+# roda tudo dentro do diretório extraído. Vamos adaptar:
+build_system = "custom"
+steps = [
+    "meson setup _build --prefix=/usr --buildtype=release",
+    "ninja -C _build",
+]
+install_steps = ["ninja -C _build install"]
+
+post_install = ["ldconfig"]

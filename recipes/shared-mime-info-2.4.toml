@@ -1,0 +1,32 @@
+# shared-mime-info-2.4 — banco de dados compartilhado de MIME types
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/shared-mime-info.html
+# Deps: glib, libxml2.
+
+name         = "shared-mime-info"
+version      = "2.4"
+description  = "Banco de dados compartilhado de MIME types — usado por gdk-pixbuf, gtk, etc."
+homepage     = "https://www.freedesktop.org/wiki/Software/shared-mime-info"
+license      = "GPL-2.0-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["glib", "libxml2"]
+optional_deps = []
+
+source  = "https://ftp.osuosl.org/pub/blfs/conglomeration/shared-mime-info/shared-mime-info-2.4.tar.gz"
+sha256  = "d87e2fac68869f45bdddea715f80f388aa68462f4e7b3dd49c5910ac677adc8f"
+
+# BLFS:
+#   mkdir build && cd build
+#   meson setup --prefix=/usr --buildtype=release -D update-mimedb=true ..
+#   ninja
+#   ninja install
+build_system   = "meson"
+configure_args = [
+    "--buildtype=release",
+    "-D update-mimedb=true",
+]
+
+post_install = ["ldconfig"]

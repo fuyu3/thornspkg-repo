@@ -1,0 +1,36 @@
+# libnl-3.12.0 — biblioteca Netlink para Linux
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/basicnet/libnl.html
+# Sem dependências externas (além do LFS base).
+# BLFS: ./configure --prefix=/usr --sysconfdir=/etc --disable-static && make && make install
+#
+# IMPORTANTE: BLFS alerta que com -j>1 o make do libnl pode "desconfigurar" o
+# terminal. Por isso sobrescrevemos os steps com make -j1 (build_system=custom
+# exige steps explícitos, e ignora configure_args).
+
+name         = "libnl"
+version      = "3.12.0"
+description  = "Biblioteca Netlink para Linux — usada por wpa_supplicant, NetworkManager, iproute2, etc."
+homepage     = "https://www.infradead.org/~tgr/libnl/"
+license      = "LGPL-2.1-or-later"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://github.com/thom311/libnl/releases/download/libnl3_12_0/libnl-3.12.0.tar.gz"
+sha256  = "fc51ca7196f1a3f5fdf6ffd3864b50f4f9c02333be28be4eeca057e103c0dd18"
+
+# BLFS: ./configure --prefix=/usr --sysconfdir=/etc --disable-static
+#        make -j1   (BLFS alerta: não suporta build paralelo)
+#        make install
+build_system = "custom"
+steps = [
+    "./configure --prefix=/usr --sysconfdir=/etc --disable-static",
+    "make -j1",
+]
+install_steps = ["make install"]
+
+post_install = ["ldconfig"]

@@ -1,0 +1,43 @@
+# harfbuzz-14.2.1 — biblioteca de shaping de texto (OpenType, Graphite2)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/harfbuzz.html
+# Deps Recommended: freetype, glib, graphite2, icu.
+# NOTA: harfbuzz é mutualmente dependente com freetype. BLFS manda construir
+# harfbuzz PRIMEIRO (sem freetype), depois freetype, depois rebuildar harfbuzz.
+# Aqui assumimos a ordem: harfbuzz (com glib+graphite2+icu, sem freetype) → freetype → harfbuzz rebuild.
+# Para simplificar, esta receita constrói harfbuzz com tudo (glib, graphite2, icu).
+# O rebuild com freetype é opcional.
+
+name         = "harfbuzz"
+version      = "14.2.1"
+description  = "Biblioteca de shaping de texto (OpenType, Graphite2) — usada por pango, freetype, etc."
+homepage     = "https://harfbuzz.github.io/"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["glib", "graphite2", "icu"]
+# NOTA: freetype é mutualmente dependente (harfbuzz → freetype → harfbuzz).
+# O BLFS manda construir harfbuzz SEM freetype primeiro, depois freetype,
+# depois rebuild harfbuzz com freetype. Aqui fazemos só a primeira build
+# (sem freetype). O rebuild é opcional — sem ele, harfbuzz funciona mas
+# não tem suporte a fontes via freetype (não afeta pango, que usa
+# fontconfig+freetype diretamente).
+optional_deps = []
+
+source  = "https://github.com/harfbuzz/harfbuzz/releases/download/14.2.1/harfbuzz-14.2.1.tar.xz"
+sha256  = "a54a5d8e9380a41fbb762ce367bcbf7704792dfca0d93f1bbca86c5a57902e0e"
+
+# BLFS:
+#   mkdir build && cd build
+#   meson setup .. --prefix=/usr --buildtype=release -D graphite2=enabled
+#   ninja
+#   ninja install
+build_system   = "meson"
+configure_args = [
+    "--buildtype=release",
+    "-D graphite2=enabled",
+]
+
+post_install = ["ldconfig"]

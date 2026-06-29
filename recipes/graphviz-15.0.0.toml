@@ -1,0 +1,42 @@
+# graphviz-15.0.0 — biblioteca e toolkit para visualização de grafos
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/graphviz.html
+# Deps Required: cmake (do LFS).
+# Recommended: pango, cairo, xorg libs, fontconfig, libpng.
+# Importante para: vala (valadoc).
+
+name         = "graphviz"
+version      = "15.0.0"
+description  = "Biblioteca e toolkit para visualização de grafos — usado por valadoc"
+homepage     = "https://graphviz.org/"
+license      = "EPL-1.0"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["pango", "cairo", "fontconfig", "libpng"]
+optional_deps = []
+
+source  = "https://gitlab.com/graphviz/graphviz/-/archive/15.0.0/graphviz-15.0.0.tar.bz2"
+sha256  = "545bcb0a3048d134133394e9f573c563a52f2704097f26aedc1f54cf7de60be4"
+
+# BLFS: remove rpath hardcoded
+pre_build = [
+    "sed '/ORIGIN/d' -i lib/CMakeLists.txt",
+]
+
+# BLFS:
+#   mkdir build && cd build
+#   cmake -D CMAKE_INSTALL_PREFIX=/usr -D CMAKE_BUILD_TYPE=Release ..
+#   sed -i '/GZIP/s/:.*$/=/' CMakeCache.txt
+#   make
+#   make install
+build_system = "custom"
+steps = [
+    "mkdir build && cd build && cmake -D CMAKE_INSTALL_PREFIX=/usr -D CMAKE_BUILD_TYPE=Release ..",
+    "cd build && sed -i '/GZIP/s/:.*$/=/' CMakeCache.txt",
+    "cd build && make",
+]
+install_steps = ["cd build && make install"]
+
+post_install = ["ldconfig"]

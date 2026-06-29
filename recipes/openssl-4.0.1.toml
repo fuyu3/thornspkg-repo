@@ -1,0 +1,38 @@
+# openssl-4.0.1 — biblioteca e toolkit TLS/SSL e crypto
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/openssl.html
+# Deps: zlib (para compressão dinâmica via zlib-dynamic), perl (build scripts).
+# Importante para: curl, wpa_supplicant, python, nss, etc.
+
+name         = "openssl"
+version      = "4.0.1"
+description  = "Biblioteca TLS/SSL e toolkit crypto (libcrypto, libssl, openssl CLI)"
+homepage     = "https://www.openssl-library.org/"
+license      = "Apache-2.0"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+depends       = ["zlib", "perl"]
+optional_deps = []
+
+source  = "https://github.com/openssl/openssl/releases/download/openssl-4.0.1/openssl-4.0.1.tar.gz"
+sha256  = "2db3f3a0d6ea4b59e1f094ace2c8cd536dffb87cdc39084c5afa1e6f7f37dd09"
+
+# LFS:
+#   ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic
+#   make
+#   make INSTALL_LIBS= MANSUFFIX=ssl install   (INSTALL_LIBS=vazio = sem .a)
+#   mv -v /usr/share/doc/openssl /usr/share/doc/openssl-4.0.1
+build_system = "custom"
+steps = [
+    """./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic""",
+    "make",
+]
+install_steps = [
+    """make INSTALL_LIBS= MANSUFFIX=ssl install""",
+    # Adiciona sufixo de versão ao dir de docs (consistência com outros pacotes)
+    """mv -v /usr/share/doc/openssl /usr/share/doc/openssl-4.0.1 2>/dev/null || true""",
+]
+
+post_install = ["ldconfig"]

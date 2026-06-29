@@ -1,0 +1,38 @@
+# duktape-2.7.0 — engine JavaScript embutível
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/duktape.html
+# Sem dependências. Build: make -f Makefile.sharedlibrary.
+# Polkit 127 usa duktape como engine JS (alternativa leve ao V8/SpiderMonkey).
+
+name         = "duktape"
+version      = "2.7.0"
+description  = "Engine JavaScript embutível e portátil — usado por polkit"
+homepage     = "https://duktape.org/"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://duktape.org/duktape-2.7.0.tar.xz"
+sha256  = "90f8d2fa8b5567c6899830ddef2c03f3c27960b11aca222fa17aa7ac613c2890"
+
+# BLFS:
+#   sed -i 's/-Os/-O2/' Makefile.sharedlibrary
+#   make -f Makefile.sharedlibrary INSTALL_PREFIX=/usr
+#   make -f Makefile.sharedlibrary INSTALL_PREFIX=/usr install
+pre_build = [
+    "sed -i 's/-Os/-O2/' Makefile.sharedlibrary",
+]
+
+build_system = "custom"
+steps = [
+    "make -f Makefile.sharedlibrary INSTALL_PREFIX=/usr",
+]
+install_steps = [
+    "make -f Makefile.sharedlibrary INSTALL_PREFIX=/usr install",
+]
+
+post_install = ["ldconfig"]

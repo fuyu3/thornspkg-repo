@@ -1,0 +1,45 @@
+# ncurses-6.6 — biblioteca de UI em terminal (terminal-independent cursor motion)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/lfs/view/systemd/chapter08/ncurses.html
+# Sem dependências externas. Importante para: slang, readline, less, vim.
+#
+# Nota: o mirror oficial invisible-mirror.net bloqueia alguns User-Agents.
+# URL de download usa o mirror NLUUG que é compatível.
+
+name         = "ncurses"
+version      = "6.6"
+description  = "Biblioteca de terminal-independent screen management (curses, terminfo)"
+homepage     = "https://www.gnu.org/software/ncurses/"
+license      = "MIT"
+maintainer   = "LFS"
+repository   = "lfs-base"
+architecture = "x86_64"
+
+depends       = []
+optional_deps = []
+
+source  = "https://ftp.nluug.nl/pub/gnu/ncurses/ncurses-6.6.tar.gz"
+sha256  = "b832d81a6a5f451996dc74a9ac07791547e6b86ed5289cd77eebb3fa5e3779f2"
+
+# LFS:
+#   ./configure --prefix=/usr --mandir=/usr/share/man \
+#       --with-shared --without-debug --without-normal --with-cxx-shared \
+#       --enable-pc-files --with-pkg-config-libdir=/usr/lib/pkgconfig
+#   make
+#   make DESTDIR=$PWD/dest install
+#   sed -e 's/^#if.*XOPEN.*$/#if 1/' -i dest/usr/include/curses.h
+#   cp --remove-destination -av dest/* /
+build_system = "custom"
+steps = [
+    """./configure --prefix=/usr --mandir=/usr/share/man \\
+        --with-shared --without-debug --without-normal \\
+        --with-cxx-shared --enable-pc-files \\
+        --with-pkg-config-libdir=/usr/lib/pkgconfig""",
+    "make",
+]
+install_steps = [
+    """make DESTDIR=$DESTDIR install && \\
+    sed -e 's/^#if.*XOPEN.*$/#if 1/' -i $DESTDIR/usr/include/curses.h""",
+]
+
+post_install = ["ldconfig"]

@@ -1,0 +1,34 @@
+# fontconfig-2.18.1 — biblioteca de configuração/customização de fontes
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/general/fontconfig.html
+# Deps Required: freetype. (Optional: curl, libxml2 — não obrigatórios.)
+
+name         = "fontconfig"
+version      = "2.18.1"
+description  = "Biblioteca de configuração e customização de fontes — base para pango, cairo, etc."
+homepage     = "https://www.fontconfig.org/"
+license      = "MIT"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+depends       = ["freetype"]
+optional_deps = []
+
+source  = "https://ftp.osuosl.org/pub/blfs/conglomeration/fontconfig/fontconfig-2.18.1.tar.xz"
+sha256  = "2300f3dbfa7253b3a44f4feecdbc8dfa45dde5dc2cfb71fceaf31f394cb41031"
+
+# BLFS:
+#   ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+#       --disable-docs --docdir=/usr/share/doc/fontconfig-2.18.1
+#   make
+#   make install
+build_system   = "autotools"
+configure_args = [
+    "--sysconfdir=/etc",
+    "--localstatedir=/var",
+    "--disable-docs",
+    "--docdir=/usr/share/doc/fontconfig-2.18.1",
+]
+
+post_install = ["ldconfig"]

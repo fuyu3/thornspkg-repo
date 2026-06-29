@@ -1,0 +1,59 @@
+# nss-3.125 — Network Security Services (Mozilla)
+# Receita baseada em:
+#   https://www.linuxfromscratch.org/blfs/view/systemd/postlfs/nss.html
+# Required: NSPR (com receita neste conjunto), patch nss-standalone-1.patch.
+# Recommended: p11-kit (runtime), sqlite, zlib.
+#
+# Este é um build custom complexo — não usa autotools/meson. O Makefile do
+# próprio NSS constrói tudo. A "instalação" é manual (cp de .so, headers, etc.).
+#
+# O patch nss-standalone-1.patch é baixado automaticamente no pre_build.
+
+name         = "nss"
+version      = "3.125"
+description  = "Network Security Services (Mozilla) — SSL/TLS, PKI, S/MIME"
+homepage     = "https://developer.mozilla.org/docs/Mozilla/Projects/NSS"
+license      = "MPL-2.0"
+maintainer   = "BLFS <blfs-discuss@lists.linuxfromscratch.org>"
+repository   = "blfs"
+architecture = "x86_64"
+
+# NSPR, sqlite e zlib — todos com receitas neste conjunto.
+# p11-kit é Recommended em runtime.
+# make-ca NÃO está aqui para evitar ciclo (p11-kit → make-ca → p11-kit).
+depends       = ["nspr", "sqlite", "zlib"]
+optional_deps = ["p11-kit"]
+
+source  = "https://archive.mozilla.org/pub/security/nss/releases/NSS_3_125_RTM/src/nss-3.125.tar.gz"
+sha256  = "1ad541f10da7c58dec01f540ecc44d28cbbc033f741a57473de5a0893d91606d"
+
+# Patch necessário do BLFS para construir NSS standalone (sem Firefox).
+# Baixado automaticamente no pre_build e aplicado com `patch -Np1`.
+_PATCH_URL  = "https://www.linuxfromscratch.org/patches/blfs/svn/nss-standalone-1.patch"
+_PATCH_SHA  = "87bb1af0b11fd41311b9899187f6e4b3fca9940651123c7bc836ec7497d2da84"
+
+pre_build = [
+    # Baixa o patch do BLFS para um local temporário e verifica SHA256
+    """mkdir -p /tmp/thorn-patches && \\
+    curl -sL --max-time 30 -o /tmp/thorn-patches/nss-standalone-1.patch \\
+        "https://www.linuxfromscratch.org/patches/blfs/svn/nss-standalone-1.patch" && \\
+    echo "87bb1af0b11fd41311b9899187f6e4b3fca9940651123c7bc836ec7497d2da84  /tmp/thorn-patches/nss-standalone-1.patch" | sha256sum -c - && \\
+    patch -Np1 -i /tmp/thorn-patches/nss-standalone-1.patch""",
+]
+
+# BLFS:
+#   cd nss
+#   make BUILD_OPT=1 NSPR_INCLUDE_DIR=/usr/include/nspr \
+#        USE_SYSTEM_ZLIB=1 ZLIB_LIBS=-lz \
+#        NSS_ENABLE_WERROR=0 NSS_USE_SYSTEM_SQLITE=1 \
+#        $([ $(uname -m) = x86_64 ] && echo USE_64=1)
+# Depois instala manualmente do dist/
+build_system = "custom"
+steps = [
+    """cd nss && make BUILD_OPT=1 NSPR_INCLUDE_DIR=/usr/include/nspr USE_SYSTEM_ZLIB=1 ZLIB_LIBS=-lz NSS_ENABLE_WERROR=0 NSS_USE_SYSTEM_SQLITE=1 $([ $(uname -m) = x86_64 ] && echo USE_64=1)""",
+]
+install_steps = [
+    """cd ../dist && install -v -m755 Linux*/lib/*.so $DESTDIR/usr/lib && install -v -m644 Linux*/lib/*.chk $DESTDIR/usr/lib && install -v -m755 -d $DESTDIR/usr/include/nss && cp -v -RL {public,private}/nss/* $DESTDIR/usr/include/nss && install -v -m755 Linux*/lib/pkgconfig/nss.pc $DESTDIR/usr/lib/pkgconfig && install -v -m755 Linux*/bin/* $DESTDIR/usr/bin""",
+]
+
+post_install = ["ldconfig"]
