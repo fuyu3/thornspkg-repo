@@ -19,7 +19,7 @@ depends       = []
 optional_deps = []
 
 source  = "https://ftp.nluug.nl/pub/gnu/ncurses/ncurses-6.6.tar.gz"
-sha256  = "b832d81a6a5f451996dc74a9ac07791547e6b86ed5289cd77eebb3fa5e3779f2"
+sha256  = "355b4cbbed880b0381a04c46617b7656e362585d52e9cf84a67e2009b749ff11"
 
 # LFS:
 #   ./configure --prefix=/usr --mandir=/usr/share/man \

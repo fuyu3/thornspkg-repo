@@ -1,5 +1,5 @@
 {
-    "generated_at": "2026-06-29T05:24:20+00:00",
+    "generated_at": "2026-06-29T22:05:58+00:00",
     "packages": {
         "bzip2": {
             "architecture": "x86_64",
@@ -650,7 +650,7 @@
             "provides": [],
             "recipe": "recipes/ncurses-6.6.toml",
             "repository": "lfs-base",
-            "sha256": "fc5ef006a84940e2bd732c9b81f83506bad54d183e778ac04c0e47025429406b",
+            "sha256": "3c2df0546236f3fa7535c45abd0f6cc17693f6f0d49ab10e6d58882d14f740e4",
             "size": 1716,
             "type": "recipe",
             "version": "6.6"
