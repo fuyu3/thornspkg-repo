@@ -1,5 +1,5 @@
 {
-    "generated_at": "2026-06-29T02:43:14+00:00",
+    "generated_at": "2026-06-29T04:39:22+00:00",
     "packages": {
         "bzip2": {
             "architecture": "x86_64",
@@ -12,8 +12,8 @@
             "provides": [],
             "recipe": "recipes/bzip2-1.0.8.toml",
             "repository": "lfs-base",
-            "sha256": "82859937d6b2e5242a3e347ed56ea37f3ca073ad0fd7c017928a75861e05212d",
-            "size": 1665,
+            "sha256": "c7484b995b52709fea27c46f794ec039aac894412965b7a7fd4c1045b2ff845c",
+            "size": 1656,
             "type": "recipe",
             "version": "1.0.8"
         },
